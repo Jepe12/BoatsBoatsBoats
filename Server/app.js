@@ -13,6 +13,8 @@ var MongoStuff = require('mongodb-memory-server');
 // This will create an new instance of "MongoMemoryServer" and automatically start it
 var mongod;
 
+var mongoURI = "mongodb+srv://Restful_Knights:hS7jb2tVdrN3RBfz@nwen304cluster.snhsycw.mongodb.net/?retryWrites=true&w=majority"
+
 MongoStuff.MongoMemoryServer.create().then((v) => { 
   mongod = v;
   console.log('mongodb started')
