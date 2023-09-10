@@ -51,11 +51,13 @@ router.delete('/nosql/:id', async function(req, res, next) {
 });
 
 
-// User Auth & Registration
+// User Authentication & Registration:
+
 const registerController = require('../controllers/register');
 router.post('/register', registerController.handleNewUser);
 
-
+const authController = require('../controllers/auth');
+router.post('/auth', authController.handleLogin);
 
 
 

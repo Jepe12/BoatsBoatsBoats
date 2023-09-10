@@ -10,11 +10,13 @@ const bcrypt = require('bcrypt');
 const handleNewUser = async(req, res) => {
     const { user, pwd } = req.body;
     // If we dont get both a username & password --> Send badrequest resp with msg
-    if (!user || !pwd) return res.status(400).json({ 'message':'username and password required.'}); 
+    if (!user || !pwd) return res.status(400).json({ 'message':'Valid email and password required.'}); 
     
+    // Perhaps we need a func to determine a valid email address if this is what we will be using as username? 
+
     // Check for duplicate usernames in DB
     const duplicate = usersDB.users.find(person => person.username === user)
-    if (duplicate) return res.sendStatus(409);
+    if (duplicate) return res.status(409).json({ 'message':'Email already taken.' });
     
     // We have a seeminly valid username & pass --> Encrypt & salt password
     try { 
