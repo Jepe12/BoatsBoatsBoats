@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose'); // Import mongoose
 
 var indexRouter = require('./routes/index');
 
@@ -11,13 +12,23 @@ var app = express();
 var MongoStuff = require('mongodb-memory-server');
 
 // This will create an new instance of "MongoMemoryServer" and automatically start it
-var mongod;
+//var mongod;
 
 var mongoURI = "mongodb+srv://Restful_Knights:hS7jb2tVdrN3RBfz@nwen304cluster.snhsycw.mongodb.net/?retryWrites=true&w=majority"
 
-MongoStuff.MongoMemoryServer.create().then((v) => { 
-  mongod = v;
-  console.log('mongodb started')
+//MongoStuff.MongoMemoryServer.create().then((v) => { 
+  //mongod = v;
+  //console.log('mongodb started')
+//});
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+})
+.catch((err) => {
+  console.error('Error connecting to MongoDB:', err);
 });
 
 app.use((req, res, next) => {
@@ -25,7 +36,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.locals.dburi = mongod.getUri();
+  res.locals.dburi = mongoURI;
   next();
 })
 

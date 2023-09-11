@@ -1,37 +1,23 @@
 var express = require('express');
 var router = express.Router();
 
-var jsonController = require('../controllers/json');
-
-router.get('/json/get', function(req, res, next) {
-  const controller = new jsonController();
-  res.json(controller.getData()).status(200);
-});
-
-router.put('/json/set', function(req, res, next) {
-  const controller = new jsonController();
-  controller.setData(req.body);
-  controller.save();
-  res.json({ message: 'success' }).status(200);
-});
-
-var NosqlController = require('../controllers/nosql');
+var ProductController = require('../controllers/product');
 
 
-router.post('/nosql/insert', async function(req, res, next) {
-  const controller = new NosqlController(res.locals.dburi);
+router.post('/product/insert', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'products');
   await controller.insertData(req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.put('/nosql/:id', async function(req, res, next) {
-  const controller = new NosqlController(res.locals.dburi);
+router.put('/product/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'products');
   await controller.replaceData(req.params.id, req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/nosql/:id', async function(req, res, next) {
-  const controller = new NosqlController(res.locals.dburi);
+router.get('/product/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'products');
   const data = await controller.getData(req.params.id);
   if (data != null) {
     res.json(data).status(200);
@@ -40,8 +26,8 @@ router.get('/nosql/:id', async function(req, res, next) {
   }
 });
 
-router.delete('/nosql/:id', async function(req, res, next) {
-  const controller = new NosqlController(res.locals.dburi);
+router.delete('/product/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'products');
   const success = await controller.deleteData(req.params.id);
   if (success) {
     res.json({ message: 'success' }).status(200);
@@ -50,6 +36,38 @@ router.delete('/nosql/:id', async function(req, res, next) {
   }
 });
 
+
+router.post('/orders/insert', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'orders');
+  await controller.insertData(req.body)
+  res.json({ message: 'success' }).status(200);
+});
+
+router.put('/orders/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'orders');
+  await controller.replaceData(req.params.id, req.body)
+  res.json({ message: 'success' }).status(200);
+});
+
+router.get('/orders/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'orders');
+  const data = await controller.getData(req.params.id);
+  if (data != null) {
+    res.json(data).status(200);
+  } else {
+    res.json({ message: 'no record found' }).status(404);
+  }
+});
+
+router.delete('/orders/:id', async function(req, res, next) {
+  const controller = new ProductController(res.locals.dburi,'orders');
+  const success = await controller.deleteData(req.params.id);
+  if (success) {
+    res.json({ message: 'success' }).status(200);
+  } else {
+    res.json({ message: 'no record found' }).status(404);
+  }
+});
 
 // User Authentication & Registration:
 
