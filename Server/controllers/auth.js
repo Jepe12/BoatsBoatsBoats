@@ -28,7 +28,7 @@ const handleLogin = async(req, res) => {
         const accessToken = jwt.sign(
             { "username": foundUser.username},
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s'} // Setting access token expiry here, set short for testing, needs to be updated to something reasonable later
+            { expiresIn: '10s'} // Setting access token expiry here, set short for testing, needs to be updated to something reasonable later
         );
         const refreshToken = jwt.sign(
             { "username": foundUser.username},
@@ -44,8 +44,8 @@ const handleLogin = async(req, res) => {
             path.join(__dirname, '..', 'models', 'users.json'),
             JSON.stringify(usersDB.users)
         );
-        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
-        res.json({ accessToken })
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
+        res.json({ accessToken })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc 
     } else {
         res.status(401).json({ 'message':'Authentication failed. Invalid password.'})
     }

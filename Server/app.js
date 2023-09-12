@@ -3,11 +3,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var credentials = require('./middleware/credentials');
 var mongoose = require('mongoose'); // Import mongoose
 
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+// Handle the options credentials check - Before any potential CORS & fetch cookies credential requirement 
+app.use(credentials);
 
 var MongoStuff = require('mongodb-memory-server');
 
