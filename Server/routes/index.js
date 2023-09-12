@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var ProductController = require('../controllers/product');
-
+const verifyJWT = require('../../Server/middleware/verifyJWT');
 
 router.post('/product/insert', async function(req, res, next) {
   const controller = new ProductController(res.locals.dburi,'products');
@@ -16,7 +16,7 @@ router.put('/product/:id', async function(req, res, next) {
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/product/:id', async function(req, res, next) {
+router.get('/product/:id',verifyJWT, async function(req, res, next) { // verifyJWT added for testing, requires auth token to access end point
   const controller = new ProductController(res.locals.dburi,'products');
   const data = await controller.getData(req.params.id);
   if (data != null) {
@@ -77,7 +77,8 @@ router.post('/register', registerController.handleNewUser);
 const authController = require('../controllers/auth');
 router.post('/auth', authController.handleLogin);
 
-// 
+const refreshTokenController = require('../controllers/refreshToken');
+router.get('/refresh',refreshTokenController.handleRefreshToken);
 
 
 
