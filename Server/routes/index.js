@@ -83,6 +83,4 @@ router.get('/refresh',refreshTokenController.handleRefreshToken);
 const logoutController = require('../controllers/logout');
 router.get('/logout', logoutController.handleLogout);
 
-
-
 module.exports = router;
