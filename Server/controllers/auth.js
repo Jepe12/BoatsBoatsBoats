@@ -41,10 +41,10 @@ const handleLogin = async(req, res) => {
         const currentUser = { ...foundUser,refreshToken };
         usersDB.setUsers([...otherUsers, currentUser]);
         await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
+            path.join(__dirname, '..', 'models', 'users.json'),
             JSON.stringify(usersDB.users)
         );
-        refreshToken.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
+        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
         res.json({ accessToken })
     } else {
         res.status(401).json({ 'message':'Authentication failed. Invalid password.'})

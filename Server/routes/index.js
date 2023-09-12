@@ -77,6 +77,9 @@ router.post('/register', registerController.handleNewUser);
 const authController = require('../controllers/auth');
 router.post('/auth', authController.handleLogin);
 
+// 
+
+
 
 
 module.exports = router;
