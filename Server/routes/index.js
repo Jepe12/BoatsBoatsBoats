@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
+// Middleware 
+
 var ProductController = require('../controllers/product');
 const verifyJWT = require('../../Server/middleware/verifyJWT');
 const ROLES_LIST = require('../config/rolesList');
 const verifyRoles = require('../middleware/verifyRoles');
+const retriveUserInfo = require('../middleware/retriveUserInfo');
 
 router.post('/product/insert', async function(req, res, next) { 
   const controller = new ProductController(res.locals.dburi,'products');
@@ -51,7 +54,7 @@ router.put('/orders/:id', async function(req, res, next) {
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/orders/:id', async function(req, res, next) {
+router.get('/orders/:id', async function(req, res, next) { 
   const controller = new ProductController(res.locals.dburi,'orders');
   const data = await controller.getData(req.params.id);
   if (data != null) {
