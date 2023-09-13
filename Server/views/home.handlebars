@@ -37,7 +37,7 @@ h1 {
     margin-bottom: 10px;
 }
 
-.products .insert {
+.products .edit {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -52,11 +52,11 @@ h1 {
     transition: opacity 0.2s ease-in-out;
 }
 
-.products .insert:hover {
+.products .edit:hover {
     color: #424242;
 }
 
-.products .product:hover .insert {
+.products .product:hover .edit {
     opacity: 1;
 }
 
@@ -80,7 +80,7 @@ h1 {
             <a href="#" class="btn btn-primary">Add To Cart</a>
         </div>
         {{#if ../admin}}
-            <a class="insert" href="/products/{{this.id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
+            <a class="edit" href="/products/{{this.id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
         {{/if}}
     </div>
     {{/each}}
@@ -92,7 +92,7 @@ h1 {
                 <h5 class="card-title">Add New product</h5>
             </div>
             <p>Create a new product and add it to the database</p>
-            <a href="/products/insert" class="btn btn-primary">Create Product</a>
+            <a href="/products/new" class="btn btn-primary">Create Product</a>
         </div>
     </div>
     {{/if}}
