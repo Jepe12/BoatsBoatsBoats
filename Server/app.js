@@ -5,7 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var credentials = require('./middleware/credentials');
 var mongoose = require('mongoose'); // Import mongoose
+var expressHandlebars = require('express-handlebars');
 
+var viewRouter = require('./routes/view');
 var indexRouter = require('./routes/index');
 
 var app = express();
@@ -50,6 +52,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const hbs = expressHandlebars.create({ });
+
+//Use a Custom Templating Engine
+app.engine('handlebars', hbs.engine);
+app.set("view engine", "handlebars");
+app.set("views", path.resolve("./views"));
+
+app.use('/', viewRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

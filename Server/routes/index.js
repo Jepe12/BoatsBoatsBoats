@@ -84,6 +84,4 @@ router.post('/auth', authController.handleLogin);
 router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 
-
-
 module.exports = router;

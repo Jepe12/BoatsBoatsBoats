@@ -1,0 +1,34 @@
+:root {
+    --bs-primary-rgb: 125, 105, 209;
+}
+
+.btn-primary {
+    --bs-btn-bg: rgb(125, 105, 209) !important;
+    --bs-btn-border-color: rgb(133, 114, 206) !important;
+    --bs-btn-hover-bg: rgb(145, 127, 219);
+    --bs-btn-hover-border-color: rgb(161, 143, 231);
+    --bs-btn-active-bg: rgb(107, 87, 189);
+    --bs-btn-active-border-color: rgb(125, 111, 180);
+    --bs-btn-active-bg: rgb(132, 124, 167);
+    --bs-btn-active-border-color: rgb(125, 118, 155);
+}
+
+.navbar {
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    background-color: rgba(255,255,255,0.3);
+    backdrop-filter: blur(20px);
+    z-index: 10;
+}
+
+.navbar img {
+    width: 40px;
+    margin-right: 20px;
+}
+
+.brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: rgb(var(--bs-primary-rgb));
+}

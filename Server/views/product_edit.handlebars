@@ -1,0 +1,149 @@
+<style>
+
+h1 {
+    font-size: 3.5rem;
+}
+
+.welcome {
+    margin-top: 15vh;
+    max-width: min(85vw, 1000px);
+}
+
+.products {
+    max-width: min(95vw, 1000px);
+    margin-top: 100px;
+    text-align: center;
+}
+
+.products .product {
+    display: inline-block;
+    margin: 0px 0px 40px 0px;
+    padding: 10px;
+    text-align: left;
+    border-radius: 5px;
+    transition: background-color ease-in-out;
+    cursor: pointer;
+    position: relative;
+    border: #eeeeee 1px solid;
+}
+
+.products .product img {
+    border-radius: 5px;
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+</style>
+
+<div class="welcome mx-auto text-center">
+    <h5>Editing Item</h5>
+</div>
+
+{{#if product}}
+<h6 class="text-center text-danger mt-5" id="errorText"></h6>
+<div class="products mx-auto">
+    <div class="product" style="width: 18rem;">
+        <img src="{{ product.imgUrl }}" id="imageElement" alt="Broken Image Link" >
+        <div>
+            <div class="row">
+                <h5 class="card-title" contenteditable="true" id="productName">{{ product.name }}</h5>
+                <span class="text-gray">$<span contenteditable="true" id="productPrice">{{ product.price }}</span></span>
+            </div>
+            <p contenteditable="true" id="productDescription">{{ product.description }}</p>
+            <a class="btn btn-primary" id="saveButton">Save Product</a>
+            <a class="btn btn-danger" id="deleteButton">Delete Product</a>
+        </div>
+    </div>
+</div>
+{{else}}
+<h3 class="text-center text-danger mt-5">404 Product Not Found</h3>
+{{/if}}
+
+<script>
+
+let nameText = document.getElementById('productName');
+let priceText = document.getElementById('productPrice');
+let descriptionText = document.getElementById('productDescription');
+let imageElement = document.getElementById('imageElement');
+let saveButton = document.getElementById('saveButton');
+let deleteButton = document.getElementById('deleteButton');
+let dangerText = document.getElementById('errorText');
+
+async function saveProduct() {
+
+    // Show loading
+    saveButton.textContent = "Loading";
+    saveButton.setAttribute("disabled", true);
+    
+    let product = {
+        name: nameText.innerText,
+        price: priceText.innerText,
+        description: descriptionText.innerText,
+        imgUrl: imageElement.src,
+        id: 8
+    }
+
+    try {
+        {{#if creation}}
+        let res = await sendRequest('/product/insert', 'post', product)
+        {{else}}
+        let res = await sendRequest('/product/{{product.id}}', 'put', product)
+        {{/if}}
+
+        let data = await res.json();
+
+        if (res.status >= 200 && res.status < 300) {
+            console.log("Successfully updated product")
+            window.location = "/"
+            return;
+        }
+
+        // Some error state
+        dangerText.innerText = data.message ?? 'Unknown error';
+
+    } catch (e) {
+        dangerText.innerText = e.message;
+    }
+
+    saveButton.removeAttribute('disabled');
+    saveButton.textContent = "Save Product";
+}
+
+saveButton.addEventListener('click', saveProduct);
+
+function updateImage() {
+    imageElement.src = prompt('Enter new image url');
+}
+
+imageElement.addEventListener('click', updateImage);
+
+async function deleteProduct() {
+
+    // Show loading
+    deleteButton.textContent = "Loading";
+    deleteButton.setAttribute("disabled", true);
+
+    try {
+        let res = await sendRequest('/product/{{product.id}}', 'delete')
+
+        let data = await res.json();
+
+        if (res.status >= 200 && res.status < 300) {
+            console.log("Successfully deleted product")
+            window.location = "/"
+            return;
+        }
+
+        // Some error state
+        dangerText.innerText = data.message ?? 'Unknown error';
+
+    } catch (e) {
+        dangerText.innerText = e.message;
+    }
+
+    deleteButton.removeAttribute('disabled');
+    deleteButton.textContent = "Delete Product";
+}
+
+deleteButton.addEventListener('click', deleteProduct);
+</script>

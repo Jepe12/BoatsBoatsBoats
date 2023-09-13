@@ -1,0 +1,107 @@
+<style>
+    body {
+        background-color: #fbfbfb;
+    }
+
+    .card {
+        width: 400px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .card[loading] .loading {
+        display: block;
+    }
+
+    .loading {
+        display: none;
+        position: absolute;
+        inset: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .loading .spinner-border {
+        position: absolute;
+        inset: 0px;
+        margin: auto;
+    }
+
+    .parent {
+        display: flex;
+        vertical-align: middle;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+    }
+</style>
+
+<div class="parent">
+    <div class="card p-4" id="cardLogin">
+        <div class="text-center pt-4">
+            <h5 class="brand">Boats, Boats, Boats</h5>
+            <h5 class="pt-4 pb-2">Sign Up</h5>
+            <h6>Create your Boats Account</h6>
+        </div>
+        <form onsubmit="login(); return false;">
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="inputEmail" class="sr-only">Email</label>
+                <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+            </div>
+            <p class="text-danger text-center" id="errorText"></p>
+            <div class="row mx-sm-3 flex-nowrap">
+                <a class="w-auto text-decoration-none pt-2" href="/login">Sign In</a>
+                <div class="flex-grow-1 w-auto"></div>
+                <button type="submit" class="w-auto btn btn-primary">Register</button>
+            </div>
+        </form>
+        <div class="loading">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+let dangerText = document.getElementById('errorText');
+let cardObject = document.getElementById('cardLogin');
+
+async function login() {
+
+    // Clear error
+    dangerText.innerText = '';
+    cardObject.setAttribute('loading', 'true');
+
+    let email = document.getElementById('inputEmail').value;
+    let password = document.getElementById('inputPassword').value;
+
+    try {
+        let res = await sendRequest('/register', 'post', {
+            user: email,
+            pwd: password
+        })
+
+        let data = await res.json();
+
+        if (res.status >= 300 || res.status < 200) {
+            // Error
+            dangerText.innerText = data.message ?? 'Unknown error';
+            cardObject.removeAttribute('loading');
+            return;
+        }
+
+        alert('Successfully retrieved token')
+        console.log(res)
+    } catch (e) {
+        dangerText.innerText = e.message;
+    }
+
+    cardObject.removeAttribute('loading');
+}
+</script>

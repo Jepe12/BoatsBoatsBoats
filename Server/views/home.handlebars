@@ -1,0 +1,99 @@
+<style>
+
+h1 {
+    font-size: 3.5rem;
+}
+
+.welcome {
+    margin-top: 15vh;
+    max-width: min(85vw, 1000px);
+}
+
+.products {
+    max-width: min(95vw, 1000px);
+    margin-top: 100px;
+    text-align: center;
+}
+
+.products .product {
+    display: inline-block;
+    margin: 0px 0px 40px 0px;
+    padding: 10px;
+    text-align: left;
+    border-radius: 5px;
+    transition: background-color ease-in-out;
+    cursor: pointer;
+    position: relative;
+}
+
+.products .product:hover {
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.products .product img {
+    border-radius: 5px;
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+.products .edit {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 24px;
+    color: #888888;
+    border-radius: 100%;
+    width: 34px;
+    height: 34px;
+    text-align: center;
+    background-color: #fafafa;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.products .edit:hover {
+    color: #424242;
+}
+
+.products .product:hover .edit {
+    opacity: 1;
+}
+
+</style>
+
+<div class="welcome mx-auto">
+    <h1>Welcome to</h1>
+    <h1 class="brand">Boats, Boats, Boats!</h1>
+</div>
+
+<div class="products mx-auto">
+    {{#each products}}
+    <div class="product" style="width: 18rem;">
+        <img src="{{ this.imgUrl }}" alt="Flying dutchmans ship">
+        <div>
+            <div class="row">
+                <h5 class="card-title">{{ this.name }}</h5>
+                <span class="text-gray">${{ this.price }}</span>
+            </div>
+            <p>{{ this.description }}</p>
+            <a href="#" class="btn btn-primary">Add To Cart</a>
+        </div>
+        {{#if ../admin}}
+            <a class="edit" href="/products/{{this.id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
+        {{/if}}
+    </div>
+    {{/each}}
+    {{#if admin}}
+    <div class="product" style="width: 18rem;">
+        <img src="/assets/boats/Add.png" alt="Add image">
+        <div>
+            <div class="row">
+                <h5 class="card-title">Add New product</h5>
+            </div>
+            <p>Create a new product and add it to the database</p>
+            <a href="/products/new" class="btn btn-primary">Create Product</a>
+        </div>
+    </div>
+    {{/if}}
+</div>
