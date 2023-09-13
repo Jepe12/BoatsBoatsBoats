@@ -42,8 +42,8 @@
     <div class="card p-4" id="cardLogin">
         <div class="text-center pt-4">
             <h5 class="brand">Boats, Boats, Boats</h5>
-            <h5 class="pt-4 pb-2">Sign In</h5>
-            <h6>Use your Boats Account</h6>
+            <h5 class="pt-4 pb-2">Sign Up</h5>
+            <h6>Create your Boats Account</h6>
         </div>
         <form onsubmit="login(); return false;">
             <div class="form-group mx-sm-3 mb-2">
@@ -56,9 +56,9 @@
             </div>
             <p class="text-danger text-center" id="errorText"></p>
             <div class="row mx-sm-3 flex-nowrap">
-                <a class="w-auto text-decoration-none pt-2" href="/register">Create Account</a>
+                <a class="w-auto text-decoration-none pt-2" href="/login">Sign In</a>
                 <div class="flex-grow-1 w-auto"></div>
-                <button type="submit" class="w-auto btn btn-primary">Login</button>
+                <button type="submit" class="w-auto btn btn-primary">Register</button>
             </div>
         </form>
         <div class="loading">
@@ -82,7 +82,7 @@ async function login() {
     let password = document.getElementById('inputPassword').value;
 
     try {
-        let res = await sendRequest('/auth', 'post', {
+        let res = await sendRequest('/register', 'post', {
             user: email,
             pwd: password
         })

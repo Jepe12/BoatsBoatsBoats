@@ -1,8 +1,6 @@
 <style>
 
 h1 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
     font-size: 3.5rem;
 }
 
@@ -25,6 +23,7 @@ h1 {
     border-radius: 5px;
     transition: background-color ease-in-out;
     cursor: pointer;
+    position: relative;
 }
 
 .products .product:hover {
@@ -38,11 +37,34 @@ h1 {
     margin-bottom: 10px;
 }
 
+.products .insert {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 24px;
+    color: #888888;
+    border-radius: 100%;
+    width: 34px;
+    height: 34px;
+    text-align: center;
+    background-color: #fafafa;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.products .insert:hover {
+    color: #424242;
+}
+
+.products .product:hover .insert {
+    opacity: 1;
+}
+
 </style>
 
 <div class="welcome mx-auto">
     <h1>Welcome to</h1>
-    <h1 class="text-primary">Boats, Boats, Boats!</h1>
+    <h1 class="brand">Boats, Boats, Boats!</h1>
 </div>
 
 <div class="products mx-auto">
@@ -57,6 +79,21 @@ h1 {
             <p>{{ this.description }}</p>
             <a href="#" class="btn btn-primary">Add To Cart</a>
         </div>
+        {{#if ../admin}}
+            <a class="insert" href="/products/{{this.id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
+        {{/if}}
     </div>
     {{/each}}
+    {{#if admin}}
+    <div class="product" style="width: 18rem;">
+        <img src="/assets/boats/Add.png" alt="Add image">
+        <div>
+            <div class="row">
+                <h5 class="card-title">Add New product</h5>
+            </div>
+            <p>Create a new product and add it to the database</p>
+            <a href="/products/insert" class="btn btn-primary">Create Product</a>
+        </div>
+    </div>
+    {{/if}}
 </div>

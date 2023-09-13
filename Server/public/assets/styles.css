@@ -25,3 +25,9 @@
     width: 40px;
     margin-right: 20px;
 }
+
+.brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: rgb(var(--bs-primary-rgb));
+}
