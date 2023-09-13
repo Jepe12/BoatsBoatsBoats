@@ -51,6 +51,7 @@ h1 {
             </div>
             <p contenteditable="true" id="productDescription">{{ product.description }}</p>
             <a class="btn btn-primary" id="saveButton">Save Product</a>
+            <a class="btn btn-danger" id="deleteButton">Delete Product</a>
         </div>
     </div>
 </div>
@@ -65,9 +66,10 @@ let priceText = document.getElementById('productPrice');
 let descriptionText = document.getElementById('productDescription');
 let imageElement = document.getElementById('imageElement');
 let saveButton = document.getElementById('saveButton');
+let deleteButton = document.getElementById('deleteButton');
 let dangerText = document.getElementById('errorText');
 
-async function save() {
+async function saveProduct() {
 
     // Show loading
     saveButton.textContent = "Loading";
@@ -78,13 +80,14 @@ async function save() {
         price: priceText.innerText,
         description: descriptionText.innerText,
         imgUrl: imageElement.src,
+        id: 8
     }
 
     try {
         {{#if creation}}
-        let res = await sendRequest('/product/{{product.id}}', 'put', product)
-        {{else}}
         let res = await sendRequest('/product/insert', 'post', product)
+        {{else}}
+        let res = await sendRequest('/product/{{product.id}}', 'put', product)
         {{/if}}
 
         let data = await res.json();
@@ -106,10 +109,41 @@ async function save() {
     saveButton.textContent = "Save Product";
 }
 
-saveButton.addEventListener('click', save);
+saveButton.addEventListener('click', saveProduct);
 
 function updateImage() {
     imageElement.src = prompt('Enter new image url');
 }
+
 imageElement.addEventListener('click', updateImage);
+
+async function deleteProduct() {
+
+    // Show loading
+    deleteButton.textContent = "Loading";
+    deleteButton.setAttribute("disabled", true);
+
+    try {
+        let res = await sendRequest('/product/{{product.id}}', 'delete')
+
+        let data = await res.json();
+
+        if (res.status >= 200 && res.status < 300) {
+            console.log("Successfully deleted product")
+            window.location = "/"
+            return;
+        }
+
+        // Some error state
+        dangerText.innerText = data.message ?? 'Unknown error';
+
+    } catch (e) {
+        dangerText.innerText = e.message;
+    }
+
+    deleteButton.removeAttribute('disabled');
+    deleteButton.textContent = "Delete Product";
+}
+
+deleteButton.addEventListener('click', deleteProduct);
 </script>

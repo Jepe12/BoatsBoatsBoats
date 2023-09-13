@@ -23,6 +23,9 @@ router.get('/register', function(req, res) {
 });
 
 router.get('/products/:productId/edit', async function(req, res) {
+    // Disable caching
+    res.set('Cache-Control', 'no-store');
+    
     const controller = new ProductController(res.locals.dburi,'products');
     const product = await controller.getData(req.params.productId);
     res.render("product_edit", { product });
