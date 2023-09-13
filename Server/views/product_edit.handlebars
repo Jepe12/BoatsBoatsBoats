@@ -25,6 +25,7 @@ h1 {
     cursor: pointer;
     position: relative;
     border: #eeeeee 1px solid;
+    width: 18rem;
 }
 
 .products .product img {
@@ -42,7 +43,7 @@ h1 {
 {{#if product}}
 <h6 class="text-center text-danger mt-5" id="errorText"></h6>
 <div class="products mx-auto">
-    <div class="product" style="width: 18rem;">
+    <div class="product">
         <img src="{{ product.imgUrl }}" id="imageElement" alt="Broken Image Link" >
         <div>
             <div class="row">

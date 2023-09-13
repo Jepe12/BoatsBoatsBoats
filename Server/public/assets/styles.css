@@ -32,3 +32,8 @@
     font-weight: bold;
     color: rgb(var(--bs-primary-rgb));
 }
+
+.cart a {
+    font-size: 24px;
+    color: #424242;
+}

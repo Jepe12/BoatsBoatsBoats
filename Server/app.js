@@ -52,7 +52,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const hbs = expressHandlebars.create({ });
+const hbs = expressHandlebars.create({
+  helpers: {
+    eq: (arg1, arg2, options) => {
+      return (arg1 == arg2);
+    },
+    gt: (arg1, arg2, options) => {
+      return (arg1 > arg2);
+    },
+    cartPrice: (arg1, arg2, options) => {
+      return (arg1 * arg2).toFixed(2);
+    },
+    empty: (arg1, arg2, options) => {
+      return arg1.length == 0;
+    }
+  }
+});
 
 //Use a Custom Templating Engine
 app.engine('handlebars', hbs.engine);
