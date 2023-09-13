@@ -21,7 +21,7 @@ const handleLogout = async (req, res) => {
     
     // If we cant find user 
     if (!foundUser) {
-        res.clearCookie( 'jwt', { httpOnly: true, sameSite: 'None' })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
+        res.clearCookie( 'jwt', { httpOnly: true, sameSite: 'None', secure: true })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
         return res.sendStatus(204); 
     }
     
@@ -34,7 +34,7 @@ const handleLogout = async (req, res) => {
         JSON.stringify(usersDB.users)
     );
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' }) // To make sure this only occurs via https: Set secure: true - Only serves on https
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }) // To make sure this only occurs via https: Set secure: true - Only serves on https
     res.sendStatus(204);// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
 }
 
