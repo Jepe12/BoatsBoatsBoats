@@ -1,14 +1,38 @@
-async function sendRequest(url, method, body) {
-    let settings = { method, body: JSON.stringify(body) };
+async function sendRequest(url, method, body, ignore401) {
+    let settings = { method, body: JSON.stringify(body), headers: {} };
 
     if (method != 'get') {
         settings.headers = {
             Accept: 'application.json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         }
     }
 
-    return fetch(url, settings);
+    if (localStorage.getItem("accessToken")) {
+        settings.headers["Authorization"] = "Bearer " + localStorage.getItem("accessToken")
+    }
+
+    let res = await fetch(url, settings);
+
+    if (res.status == 401 && !ignore401) {
+        console.log("Unauthorized, refreshing token");
+        
+        // Unauthorized, refresh token
+        const refreshResponse = await fetch("/refresh", { method: "get", credentials: 'include' });
+
+        if (refreshResponse.status != 200) {
+            console.warn("Refresh request failed.");
+            return;
+        }
+
+        let token = await refreshResponse.json();
+
+        localStorage.setItem("accessToken", token.accessToken);
+     
+        return sendRequest(url, method, body, true);
+    }
+
+    return res;
 }
 
 function CookiesHelper() {}
