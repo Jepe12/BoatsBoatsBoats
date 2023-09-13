@@ -22,7 +22,10 @@ const handleNewUser = async(req, res) => {
     try { 
         const hashedPwd = await bcrypt.hash(pwd, 10);
         // Create new user & store in DB
-        const newUser = { 'username': user, 'password': hashedPwd};
+        const newUser = { 'username': user,
+                          'roles': { "User": 7777},
+                          'password': hashedPwd
+                        };
         usersDB.setUsers([...usersDB.users, newUser]); // (Creating a new array and seeting it in DB, this may need to change to using model when moving to mongo? )
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'models', 'users.json'),

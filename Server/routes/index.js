@@ -3,20 +3,22 @@ var router = express.Router();
 
 var ProductController = require('../controllers/product');
 const verifyJWT = require('../../Server/middleware/verifyJWT');
+const ROLES_LIST = require('../config/rolesList');
+const verifyRoles = require('../middleware/verifyRoles');
 
-router.post('/product/insert', async function(req, res, next) {
+router.post('/product/insert', async function(req, res, next) { 
   const controller = new ProductController(res.locals.dburi,'products');
   await controller.insertData(req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.put('/product/:id', async function(req, res, next) {
+router.put('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin), async function(req, res, next) { // Admin access required verifyRoles arg specifies which roles can access it, user will only need one to match.
   const controller = new ProductController(res.locals.dburi,'products');
   await controller.replaceData(req.params.id, req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/product/:id',verifyJWT, async function(req, res, next) { // verifyJWT added for testing, requires auth token to access end point
+router.get('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.User, ROLES_LIST.Admin), async function(req, res, next) { // User access only    // verifyJWT added for testing, requires auth token to access end point. verifyRole() passing in whichever role we want to be able to access this end point, method checks that client has permissions
   const controller = new ProductController(res.locals.dburi,'products');
   const data = await controller.getData(req.params.id);
   if (data != null) {
@@ -72,15 +74,14 @@ router.delete('/orders/:id', async function(req, res, next) {
 // User Authentication & Registration:
 
 const registerController = require('../controllers/register');
-router.post('/register', registerController.handleNewUser);
-
 const authController = require('../controllers/auth');
-router.post('/auth', authController.handleLogin);
-
 const refreshTokenController = require('../controllers/refreshToken');
-router.get('/refresh',refreshTokenController.handleRefreshToken);
-
 const logoutController = require('../controllers/logout');
+
+
+router.post('/register', registerController.handleNewUser);
+router.post('/auth', authController.handleLogin);
+router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 
 
