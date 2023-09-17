@@ -1,15 +1,10 @@
-//const usersDB = {
-    //users: require('../models/users.json'), //This should be retriving users from mongo (Currently using usersTESTjson to mock)
-  //  setUsers: function (data) {this.users = data}
-//}
 var ProductController = require('../controllers/product');
-const fsPromises = require('fs').promises;
-const path = require('path');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async(req, res) => {
     const { user, pwd } = req.body;
     const controller = new ProductController(res.locals.dburi,'users');
+    
     // If we dont get both a username & password --> Send badrequest resp with msg
     if (!user || !pwd) return res.status(400).json({ 'message':'Valid email and password required.'}); 
     
@@ -32,14 +27,8 @@ const handleNewUser = async(req, res) => {
                         };
 
         await controller.insertData(newUser);
-        //usersDB.setUsers([...usersDB.users, newUser]); // (Creating a new array and seeting it in DB, this may need to change to using model when moving to mongo? )
-        //await fsPromises.writeFile(
-          //  path.join(__dirname, '..', 'models', 'users.json'),
-         //   JSON.stringify(usersDB.users)
-       // );
-        
+       
         // Announce Success
-        //console.log(usersDB.users);
         res.status(201).json({ 'Success': `New user ${user} created!` });
     } catch (err) {
         res.status(500).json({ 'message': err.message });

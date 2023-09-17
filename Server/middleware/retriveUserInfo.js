@@ -1,14 +1,8 @@
-const usersDB = {
-    users: require('../models/users.json'), //This should be retriving users from mongo (Currently using usersTESTjson to mock)
-    setUsers: function (data) { this.users = data }
-}
-//const fs = require('fs');
-//const { MongoClient } = require('mongodb');
-const fsPromises = require('fs').promises;
-const path = require('path');
-
+var ProductController = require('../controllers/product');
 
 const retriveUserInfo = async (req, res, next) => {
+    
+    const controller = new ProductController(res.locals.dburi,'users');
 
     const cookies = req.cookies;
 
@@ -19,7 +13,7 @@ const retriveUserInfo = async (req, res, next) => {
     const refreshToken = cookies.jwt;
 
     // If we do have a refresh token passed --> Check if token in DB
-    const foundUser = usersDB.users.find(person => person.refreshToken === refreshToken);
+    const foundUser = await controller.getDataToken(refreshToken);
 
     // If we cant find user --> Also Do nothing (its fine for unlogged user to access this page)
     if (!foundUser) {

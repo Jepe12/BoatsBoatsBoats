@@ -1,7 +1,3 @@
-//const usersDB = {
-    //users: require('../models/users.json'),
-  //  setUsers: function (data) { this.users = data }
-//}
 var ProductController = require('../controllers/product');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -13,6 +9,7 @@ const handleRefreshToken = async (req, res) => {
     const refreshToken = cookies.jwt;
     const foundUser = await controller.getDataToken(refreshToken);
     if (!foundUser) return res.sendStatus(403); //Forbidden 
+    
     // evaluate jwt 
     jwt.verify(
         refreshToken,

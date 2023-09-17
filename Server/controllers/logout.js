@@ -1,10 +1,4 @@
-//const usersDB = {
-    //users: require('../models/users.json'), //This should be retriving users from mongo (Currently using usersTESTjson to mock)
-  //  setUsers: function (data) {this.users = data}
-//}
 var ProductController = require('../controllers/product');
-const fsPromises = require('fs').promises;
-const path = require('path');
 
 
 const handleLogout = async (req, res) => {
@@ -21,21 +15,14 @@ const handleLogout = async (req, res) => {
     
     // If we cant find user 
     if (!foundUser) {
-        res.clearCookie( 'jwt', { httpOnly: true, sameSite: 'None', secure: true })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
+        res.clearCookie( 'jwt', { httpOnly: true, sameSite: 'None', /*secure: true*/ })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
         return res.sendStatus(204); 
     }
     
     // Delete the refreshToken in the DB 
     await controller.deleteToken(foundUser.username);
-    /**const otherUsers = usersDB.users.filter(person => person.refreshToken !== foundUser.refreshToken);
-    const currentUser = {...foundUser, refreshToken: ''}; // Blank the token
-    usersDB.setUsers([...otherUsers, currentUser]); 
-    await fsPromises.writeFile(
-        path.join(__dirname, '..', 'models', 'users.json'),
-        JSON.stringify(usersDB.users)
-    );**/
-
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }) // To make sure this only occurs via https: Set secure: true - Only serves on https
+    
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', /*secure: true*/ }) // To make sure this only occurs via https: Set secure: true - Only serves on https
     res.sendStatus(204);// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
 }
 

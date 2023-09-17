@@ -23,6 +23,7 @@ router.put('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin), async funct
 
 router.get('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin, ROLES_LIST.User), async function(req, res, next) { // User access only    // verifyJWT added for testing, requires auth token to access end point. verifyRole() passing in whichever role we want to be able to access this end point, method checks that client has permissions
   const controller = new ProductController(res.locals.dburi,'products');
+
   const data = await controller.getData(req.params.id);
   if (data != null) {
     res.json(data).status(200);
