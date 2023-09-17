@@ -17,6 +17,18 @@ class ProductController {
         return await this.collection.findOne({id: parseInt(id)})
     }
 
+    async getDataUser(user) {
+        return await this.collection.findOne({username: user})
+    }
+
+    async getDataToken(token) {
+        return await this.collection.findOne({refreshToken: token})
+    }
+
+    async getAllData() {
+        return await this.collection.find().toArray();
+    }
+
     async insertData(data) {
         await this.collection.insertOne(data);
     }
@@ -31,8 +43,17 @@ class ProductController {
         );
     }
 
+    async updateRefreshToken(username, refreshToken) {
+        // Find the user by username and update their refreshToken field
+        await this.collection.updateOne({ username }, { $set: { refreshToken } });
+      }
+
     async deleteData(id) {
         return (await this.collection.deleteOne({id: parseInt(id)})).deletedCount >= 1;
+    }
+
+    async deleteToken(username) {
+        await this.collection.updateOne({ username }, { $set: { refreshToken: '' } });
     }
 }
 

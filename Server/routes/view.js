@@ -7,15 +7,13 @@ const verifyRoles = require('../middleware/verifyRoles');
 
 router.get('/', async function(req, res) {
     const controller = new ProductController(res.locals.dburi,'products');
-    const product = await controller.getData(7);
-
+    const product = await controller.getAllData();
+    console.log(product);
     let admin = req.roles?.any(role => role == ROLES_LIST.Admin) ?? true; // TODO: Remove once req.roles loaded through middleware
 
     res.render("home", {
         // TODO:, replace this with array of actual `Boat[]` from db
-        products: [
-            product,
-        ],
+        products: product,
         admin, // TODO: Decide by authorization
         user: req.user
     });

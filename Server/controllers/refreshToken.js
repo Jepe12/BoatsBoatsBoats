@@ -1,16 +1,17 @@
-const usersDB = {
-    users: require('../models/users.json'),
-    setUsers: function (data) { this.users = data }
-}
+//const usersDB = {
+    //users: require('../models/users.json'),
+  //  setUsers: function (data) { this.users = data }
+//}
+var ProductController = require('../controllers/product');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async (req, res) => {
+    const controller = new ProductController(res.locals.dburi,'users');
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(401);
     const refreshToken = cookies.jwt;
-
-    const foundUser = usersDB.users.find(person => person.refreshToken === refreshToken);
+    const foundUser = await controller.getDataToken(refreshToken);
     if (!foundUser) return res.sendStatus(403); //Forbidden 
     // evaluate jwt 
     jwt.verify(

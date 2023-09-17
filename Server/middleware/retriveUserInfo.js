@@ -2,7 +2,8 @@ const usersDB = {
     users: require('../models/users.json'), //This should be retriving users from mongo (Currently using usersTESTjson to mock)
     setUsers: function (data) { this.users = data }
 }
-
+//const fs = require('fs');
+//const { MongoClient } = require('mongodb');
 const fsPromises = require('fs').promises;
 const path = require('path');
 
