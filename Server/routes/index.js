@@ -11,8 +11,8 @@ const retrieveUserInfo = require('../middleware/retrieveUserInfo');
 
 router.post('/product/insert', async function(req, res, next) { 
   const controller = new ProductController(res.locals.dburi,'products');
-  await controller.insertData(req.body)
-  res.json({ message: 'success' }).status(200);
+  const id = await controller.insertData(req.body)
+  res.json(id).status(200);
 });
 
 router.put('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin), async function(req, res, next) { // Admin access required verifyRoles arg specifies which roles can access it, user will only need one to match.
@@ -46,8 +46,8 @@ router.delete('/product/:id', async function(req, res, next) {
 
 router.post('/orders/insert', async function(req, res, next) {
   const controller = new ProductController(res.locals.dburi,'orders');
-  await controller.insertData(req.body)
-  res.json({ message: 'success' }).status(200);
+  const id = await controller.insertData(req.body)
+  res.json(id).status(200);
 });
 
 router.put('/orders/:id', async function(req, res, next) {

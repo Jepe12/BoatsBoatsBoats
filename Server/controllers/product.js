@@ -14,7 +14,7 @@ class ProductController {
     }
 
     async getData(id) {
-        return await this.collection.findOne({id: parseInt(id)})
+        return await this.collection.findOne({_id: parseInt(id)})
     }
 
     async getDataUser(user) {
@@ -30,7 +30,8 @@ class ProductController {
     }
 
     async insertData(data) {
-        await this.collection.insertOne(data);
+        const result = await this.collection.insertOne(data);
+        return result.insertedId;
     }
 
     async replaceData(id, data) {
