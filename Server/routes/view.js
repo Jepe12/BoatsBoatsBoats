@@ -78,6 +78,28 @@ router.get('/cart', retrieveUserInfo, async function(req, res) {
 
     const controller = new ProductController(res.locals.dburi,'products');
 
+    const setProducts = [{
+        "_id": "65063375533acb75f17a5e96",
+        "name": "Wood",
+        "price": "14.99",
+        "description": "Boat",
+        "imgUrl": "https://t3.ftcdn.net/jpg/00/41/60/94/360_F_41609453_X3A8NNRDWvihqMLoJUVNmrQyKQgwgvh4.jpg"
+      },
+      {
+        "_id": "6506340f3fa56732141b90fd",
+        "name": "Cool boat",
+        "price": "14.99",
+        "description": "Epic",
+        "imgUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvf5kPCFM8-7SXnSzFNl8VWzWvCycVCgEheg&usqp=CAU",
+      },
+      {
+        "_id": "6506347cf848557fbb47fbb1",
+        "name": "Crazy Boat",
+        "price": "1400.99",
+        "description": "Crazy Fast",
+        "imgUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvf5kPCFM8-7SXnSzFNl8VWzWvCycVCgEheg&usqp=CAU",
+      }];
+
     // Load products
     let cartList = [];
     let total = 0;
@@ -85,7 +107,9 @@ router.get('/cart', retrieveUserInfo, async function(req, res) {
     for (let row of Object.entries(cart)) {
         let productId = row[0], amount = row[1];
 
-        const productInfo = await controller.getData(productId);
+        // Replace once working
+        //const productInfo = await controller.getData(productId);
+        const productInfo = setProducts.find((product) => product._id == productId)
 
         cartList.push({ ...productInfo, amount });
 
@@ -118,6 +142,38 @@ router.get('/order/:orderId', retrieveUserInfo, async function(req, res) {
     let gst = order?.total * 0.15;
 
     res.render("order", { itemList: order?.products ?? [], total: order?.total.toFixed(2), user: res.locals.userData?.username, gst: gst.toFixed(2), cartSize });
+});
+
+
+router.get('/order', retrieveUserInfo, async function(req, res) {
+    let cartSize = undefined;
+
+    if (req.cookies.cart) {
+        try {
+            cartSize = Object.values(JSON.parse(req.cookies.cart)).map((v) => parseInt(v)).reduce((a, b) => a + b, 0);
+        } catch (e) {}
+    }
+
+    const controller = new ProductController(res.locals.dburi, 'orders');
+
+    // TODO: Replace with actual orders data
+    var oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    let orders = [
+        {products: [{name:'whatever', id: 'id',quantity:2},{name:'whatever2', id: 'id',quantity:1}],total:14.99, time: oneWeekAgo,id:'123'}, 
+        {products: [{name:'whatever', id: 'id',quantity:2},{name:'whatever2', id: 'id',quantity:4}],total:14.99, time: new Date(),id:'6623'}
+    ];
+
+    orders = orders.map((v) => {
+        // Calculate itemCount
+        v.itemCount = Object.values(v.products).map((v) => parseInt(v.quantity)).reduce((a, b) => a + b, 0);
+        return v;
+    });
+
+    console.log(orders)
+
+    res.render("orders", { orders: orders ?? [], user: res.locals.userData?.username, cartSize });
 });
 
 module.exports = router;

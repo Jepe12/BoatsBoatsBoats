@@ -1,0 +1,53 @@
+<style>
+
+.products {
+    max-width: min(95vw, 1000px);
+    margin-top: 100px;
+    text-align: center;
+}
+
+.products .product {
+    display: flex;
+    flex-direction: row;
+    margin: 0px 0px 14px 0px;
+    padding: 0px 20px;
+    text-align: left;
+    border-radius: 15px;
+    transition: background-color ease-in-out;
+    cursor: pointer;
+    position: relative;
+    background-color: #fafafa;
+    color: rgb(95, 95, 95);
+}
+
+.chevron {
+    font-size: 34px;
+    align-self: center;
+}
+
+.item-count {
+    font-size: 18px;
+    align-self: center;
+}
+
+</style>
+
+<div class="products mx-auto">
+    <h3 class="mb-4">Orders</h3>
+    <div class="row">
+        <div class="col">
+            {{#each orders}}
+            <a class="product text-decoration-none" href="/order/{{id}}">
+                <h5 class="card-title my-4">{{ toLocaleDateString this.time }} - ${{ this.total }}</h5>
+                <div class="flex-grow-1 w-auto"></div>
+                <span class="w-auto vertical-align item-count">{{ this.itemCount }} Items</span>
+                <iconify-icon icon="mdi:chevron-right" class="chevron"></iconify-icon>
+            </a>
+            {{/each}}
+        </div>
+    </div>
+    {{#if (empty orders)}}
+    <h6>No Order History</h6>
+    <a class="btn btn-primary" href="/">Start Shopping</a>
+    {{/if}}
+</div>
