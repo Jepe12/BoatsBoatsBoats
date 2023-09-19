@@ -35,6 +35,8 @@ async function sendRequest(url, method, body, ignore401) {
     return res;
 }
 
+// Helper by litodam
+// https://gist.github.com/litodam/3048775
 function CookiesHelper() {}
 
 // usage
