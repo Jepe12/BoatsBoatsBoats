@@ -23,7 +23,8 @@ const retriveUserInfo = async (req, res, next) => {
     // If we do have a user with valid Refresh token in DB (They are logged in) --> Add userInfo to res
     res.locals.userData = {
         username: foundUser.username,
-        roles: foundUser.roles
+        roles: foundUser.roles,
+        id: foundUser._id
     };
 
     next();

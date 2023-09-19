@@ -10,27 +10,12 @@
     display: flex;
     flex-direction: row;
     margin: 0px 0px 14px 0px;
-    padding: 10px;
+    padding: 2px 30px;
     text-align: left;
     border-radius: 15px;
     transition: background-color ease-in-out;
-    cursor: pointer;
     position: relative;
     background-color: #fafafa;
-}
-
-.products .product img {
-    border-radius: 10px;
-    max-width: 100%;
-    margin-bottom: 10px;
-    height: 140px;
-    margin-right: 20px;
-}
-
-.quantity {
-    width: 65px;
-    background-color: transparent;
-    border: none;
 }
 
 .purchase {
@@ -47,14 +32,7 @@
         <div class="col-md-8">
             {{#each itemList}}
             <div class="product">
-                <img src="{{ this.imgUrl }}">
-                <div class="col">
-                    <h5 class="card-title my-4">{{ this.name }}</h5>
-                    <div class="row pe-2">
-                        <div class="flex-grow-1 w-auto"></div>
-                        <span class="text-gray w-auto">${{cartPrice this.price amount }}</span>
-                    </div>
-                </div>
+                    <h5 class="card-title my-4">x{{quantity}} - {{ this.name }}</h5>
             </div>
             {{/each}}
         </div>
@@ -76,7 +54,6 @@
                     <div class="flex-grow-1 w-auto"></div>
                     <span class="w-auto">${{ total }}</span>
                 </b>
-                <button class="btn btn-primary mt-4 w-100" id="confirm-button">Confirm Order</button>
             </div>
         {{/if}}
     </div>

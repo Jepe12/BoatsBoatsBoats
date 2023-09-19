@@ -120,11 +120,14 @@ async function confirmOrder() {
 
     if (res.status == 200) {
         // Success
-        let json = await res.json();
+        let data = await res.text();
+
+        // Remove quotes
+        data = data.substr(1, data.length - 2);
 
         CookiesHelper.eraseCookie('cart');
 
-        window.location = '/order/' + json.orderId;
+        window.location = '/order/' + data;
     } else {
         confirmButton.removeAttribute('disabled');
         confirmButton.textContent = 'Confirm Order';
