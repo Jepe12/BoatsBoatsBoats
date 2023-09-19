@@ -96,7 +96,23 @@ async function login() {
             return;
         }
 
-        alert('Successfully retrieved token')
+        // Get login token
+        let res = await sendRequest('/auth', 'post', {
+            user: email,
+            pwd: password
+        })
+
+        let data = await res.json();
+
+        if (res.status >= 300 || res.status < 200) {
+            // Error
+            dangerText.innerText = 'Account created, but encountered error signing in: ' + data.message ?? 'Account created, but encountered unknown error signing';
+            cardObject.removeAttribute('loading');
+            return;
+        }
+
+        // Success, redirect
+        window.location = '/'
     } catch (e) {
         dangerText.innerText = e.message;
     }

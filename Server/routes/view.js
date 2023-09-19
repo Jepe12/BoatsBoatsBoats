@@ -4,22 +4,34 @@ var ProductController = require('../controllers/product');
 const verifyJWT = require('../../Server/middleware/verifyJWT');
 const ROLES_LIST = require('../config/rolesList');
 const verifyRoles = require('../middleware/verifyRoles');
+const retrieveUserInfo = require('../middleware/retrieveUserInfo')
 
-router.get('/', async function(req, res) {
+router.get('/', retrieveUserInfo, async function(req, res) {
     const controller = new ProductController(res.locals.dburi,'products');
-    const product = await controller.getAllData();
-    console.log(product);
-    let admin = req.roles?.any(role => role == ROLES_LIST.Admin) ?? true; // TODO: Remove once req.roles loaded through middleware
+    const products = await controller.getAllData();
+    
+    let admin = false;
+    let user = undefined;
+
+    if (res.locals.userData) {
+        admin = Object.values(res.locals.userData?.roles).some(role => role == ROLES_LIST.Admin);
+        user = res.locals.userData.username;
+    }
 
     res.render("home", {
-        // TODO:, replace this with array of actual `Boat[]` from db
-        products: product,
-        admin, // TODO: Decide by authorization
-        user: req.user
+        products,
+        admin,
+        user
     });
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', retrieveUserInfo, function(req, res) {
+
+    if (res.locals.userData) {
+        res.redirect(303, '/');
+        return;
+    }
+
     res.render("login", { layout: 'basic', user: req.user });
 });
 
@@ -56,6 +68,8 @@ router.get('/cart', async function(req, res) {
 
     // Load products
     let cartList = [];
+
+    console.log(cart)
 
     for (let row of Object.entries(cart)) {
         let productId = row[0], amount = row[1];

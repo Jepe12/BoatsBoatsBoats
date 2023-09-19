@@ -7,7 +7,7 @@ var ProductController = require('../controllers/product');
 const verifyJWT = require('../../Server/middleware/verifyJWT');
 const ROLES_LIST = require('../config/rolesList');
 const verifyRoles = require('../middleware/verifyRoles');
-const retriveUserInfo = require('../middleware/retriveUserInfo');
+const retrieveUserInfo = require('../middleware/retrieveUserInfo');
 
 router.post('/product/insert', async function(req, res, next) { 
   const controller = new ProductController(res.locals.dburi,'products');

@@ -96,7 +96,8 @@ async function login() {
             return;
         }
 
-        alert('Successfully retrieved token')
+        console.log("Successfully logged in")
+        window.location = '/'
     } catch (e) {
         dangerText.innerText = e.message;
     }

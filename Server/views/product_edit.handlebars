@@ -80,15 +80,14 @@ async function saveProduct() {
         name: nameText.innerText,
         price: priceText.innerText,
         description: descriptionText.innerText,
-        imgUrl: imageElement.src,
-        id: 8
+        imgUrl: imageElement.src
     }
 
     try {
         {{#if creation}}
         let res = await sendRequest('/product/insert', 'post', product)
         {{else}}
-        let res = await sendRequest('/product/{{product.id}}', 'put', product)
+        let res = await sendRequest('/product/{{product._id}}', 'put', product)
         {{/if}}
 
         let data = await res.json();
@@ -125,7 +124,7 @@ async function deleteProduct() {
     deleteButton.setAttribute("disabled", true);
 
     try {
-        let res = await sendRequest('/product/{{product.id}}', 'delete')
+        let res = await sendRequest('/product/{{product._id}}', 'delete')
 
         let data = await res.json();
 

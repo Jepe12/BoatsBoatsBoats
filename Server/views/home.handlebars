@@ -78,10 +78,10 @@ h1 {
                 <span class="text-gray">${{ this.price }}</span>
             </div>
             <p>{{ this.description }}</p>
-            <a onclick="addToCart({{this.id}})" class="btn btn-primary">Add To Cart</a>
+            <a onclick="addToCart('{{this._id}}')" class="btn btn-primary">Add To Cart</a>
         </div>
         {{#if ../admin}}
-            <a class="edit" href="/products/{{this.id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
+            <a class="edit" href="/products/{{this._id}}/edit"><iconify-icon icon="mdi:cog"></iconify-icon></a>
         {{/if}}
     </div>
     {{/each}}
@@ -100,6 +100,7 @@ h1 {
 </div>
 
 <script>
+
 function addToCart(productId) {
     if (CookiesHelper.readCookie("cart") == undefined) {
         // Create cart
@@ -119,4 +120,5 @@ function addToCart(productId) {
 
     window.location = "/cart"
 }
+
 </script>
