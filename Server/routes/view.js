@@ -106,10 +106,9 @@ router.get('/cart', retrieveUserInfo, async function(req, res) {
 
     for (let row of Object.entries(cart)) {
         let productId = row[0], amount = row[1];
-
         // Replace once working
-        //const productInfo = await controller.getData(productId);
-        const productInfo = setProducts.find((product) => product._id == productId)
+        const productInfo = await controller.getData(productId);
+        //const productInfo = setProducts.find((product) => product._id == productId)
 
         cartList.push({ ...productInfo, amount });
 

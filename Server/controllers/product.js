@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb'); // Corrected import
 
 class ProductController {
 
@@ -14,7 +15,8 @@ class ProductController {
     }
 
     async getData(id) {
-        return await this.collection.findOne({_id: parseInt(id)})
+        const query = { _id: new ObjectId(id) };
+        return await this.collection.findOne(query);
     }
 
     async getDataUser(user) {
