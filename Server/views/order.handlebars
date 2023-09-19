@@ -45,21 +45,12 @@
 <div class="products mx-auto">
     <div class="row">
         <div class="col-md-8">
-            {{#each cartList}}
+            {{#each itemList}}
             <div class="product">
                 <img src="{{ this.imgUrl }}">
                 <div class="col">
                     <h5 class="card-title my-4">{{ this.name }}</h5>
                     <div class="row pe-2">
-                        <select name="quantity" class="quantity" onchange="updateQuantity('{{_id}}', event)"> 
-                            <option value="0">Remove</option>
-                            <option value="1" {{#if (eq amount 1)}}selected{{/if}}>1</option>
-                            <option value="2" {{#if (eq amount 2)}}selected{{/if}}>2</option>
-                            <option value="3" {{#if (eq amount 3)}}selected{{/if}}>3</option>
-                            <option value="4" {{#if (eq amount 4)}}selected{{/if}}>4</option>
-                            <option value="5" {{#if (eq amount 5)}}selected{{/if}}>5</option>
-                            <option value="6" {{#if (gt amount 5)}}selected{{/if}}>6+</option>
-                        </select>
                         <div class="flex-grow-1 w-auto"></div>
                         <span class="text-gray w-auto">${{cartPrice this.price amount }}</span>
                     </div>
@@ -67,7 +58,7 @@
             </div>
             {{/each}}
         </div>
-        {{#if (notEmpty cartList)}}
+        {{#if (notEmpty itemList)}}
             <div class="col-md-4 purchase">
                 <h5 class="text-lg text-bold mb-4">Order</h5>
                 <div class="row my-2">
@@ -89,65 +80,8 @@
             </div>
         {{/if}}
     </div>
-    {{#if (empty cartList)}}
-    <h6>Cart Empty</h6>
+    {{#if (empty itemList)}}
+    <h6>Invalid Order Id</h6>
     <a class="btn btn-primary" href="/">Start Shopping</a>
     {{/if}}
 </div>
-
-<script>
-
-let confirmButton = document.getElementById("confirm-button");
-
-async function confirmOrder() {
-
-    confirmButton.setAttribute('disabled', true);
-
-    confirmButton.textContent = 'Loading...';
-
-    let res = await sendRequest('/orders/insert', 'POST', {
-        products: [
-            {{#each cartList}}
-            {
-                name: '{{name}}',
-                id: '{{_id}}',
-                quantity: {{amount}},
-            },
-            {{/each}}
-        ],
-        total: {{total}}
-    });
-
-    if (res.status == 200) {
-        // Success
-        let json = await res.json();
-
-        CookiesHelper.eraseCookie('cart');
-
-        window.location = '/order/' + json.orderId;
-    } else {
-        confirmButton.removeAttribute('disabled');
-        confirmButton.textContent = 'Confirm Order';
-    }
-}
-
-confirmButton.addEventListener('click', confirmOrder);
-
-function updateQuantity(productId, event) {
-    let value = event.target.value;    
-
-    // product id -> quantity mapper
-    let cart = JSON.parse(CookiesHelper.readCookie("cart"))
-
-    cart[productId] = value;
-
-    if (cart[productId] == 0) {
-        delete cart[productId];
-    }
-
-    CookiesHelper.createCookie("cart", JSON.stringify(cart));
-
-    location.reload();
-}
-
-</script>

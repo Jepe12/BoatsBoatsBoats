@@ -22,7 +22,7 @@ async function sendRequest(url, method, body, ignore401) {
 
         if (refreshResponse.status != 200) {
             console.warn("Refresh request failed.");
-            return;
+            return res;
         }
 
         let token = await refreshResponse.json();
@@ -33,6 +33,15 @@ async function sendRequest(url, method, body, ignore401) {
     }
 
     return res;
+}
+
+async function logout() {
+    try {
+        await sendRequest('/logout', 'get');
+        window.location = '/'
+    } catch (e) {
+        console.warn('Failed to logout')
+    }
 }
 
 // Helper by litodam
@@ -68,5 +77,5 @@ CookiesHelper.readCookie = function(name) {
 }
 
 CookiesHelper.eraseCookie = function(name) {
-    createCookie(name, "", -1);
+    CookiesHelper.createCookie(name, "", -1);
 }

@@ -85,7 +85,7 @@ async function login() {
         let res = await sendRequest('/register', 'post', {
             user: email,
             pwd: password
-        })
+        }, false)
 
         let data = await res.json();
 

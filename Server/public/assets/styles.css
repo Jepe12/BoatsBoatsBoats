@@ -9,8 +9,8 @@
     --bs-btn-hover-border-color: rgb(161, 143, 231);
     --bs-btn-active-bg: rgb(107, 87, 189);
     --bs-btn-active-border-color: rgb(125, 111, 180);
-    --bs-btn-active-bg: rgb(132, 124, 167);
-    --bs-btn-active-border-color: rgb(125, 118, 155);
+    --bs-btn-disabled-bg: rgb(132, 124, 167);
+    --bs-btn-disabled-border-color: rgb(125, 118, 155);
 }
 
 .navbar {

@@ -65,6 +65,9 @@ const hbs = expressHandlebars.create({
     },
     empty: (arg1, arg2, options) => {
       return arg1.length == 0;
+    },
+    notEmpty: (arg1, arg2, options) => {
+      return arg1.length != 0;
     }
   }
 });
