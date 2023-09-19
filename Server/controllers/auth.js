@@ -39,7 +39,7 @@ const handleLogin = async(req, res) => {
         // Update the user's refreshToken in the database
         await controller.updateRefreshToken(foundUser.username, refreshToken);
         
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', /*secure: true*/ maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
+        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000}); // Setting the refresh token as http only prevents it from being accessed by JavaScript, lil bit heaps better security. Much more secure than storing it in local storage or anything like that. 
         res.json({ accessToken })// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc 
     } else {
         res.status(401).json({ 'message':'Authentication failed. Invalid password.'})
