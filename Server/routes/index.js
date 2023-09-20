@@ -44,9 +44,11 @@ router.delete('/product/:id', async function(req, res, next) {
 });
 
 
-router.post('/orders/insert', async function(req, res, next) {
+router.post('/orders/insert', retrieveUserInfo, async function(req, res, next) {
   const controller = new ProductController(res.locals.dburi,'orders');
-  const id = await controller.insertData(req.body)
+  console.log(req.body);
+  req.body.userId = res.locals.id;
+  const id = await controller.insertData(req.body);
   res.json(id).status(200);
 });
 
