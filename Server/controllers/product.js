@@ -20,7 +20,7 @@ class ProductController {
     }
 
     async getDataUser(user) {
-        return await this.collection.find({username: user}).toArray()
+        return await this.collection.findOne({username: user})
     }
 
     async getDataToken(token) {
