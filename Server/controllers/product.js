@@ -19,6 +19,10 @@ class ProductController {
         return await this.collection.findOne(query);
     }
 
+    async getDataOrder(user) {
+        return await this.collection.findOne({userId: user})
+    }
+
     async getDataUser(user) {
         return await this.collection.findOne({username: user})
     }

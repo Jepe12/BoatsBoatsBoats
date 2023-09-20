@@ -139,11 +139,12 @@ router.get('/order', retrieveUserInfo, async function(req, res) {
 
     const controller = new ProductController(res.locals.dburi, 'orders');
 
-    let orders = await controller.getDataUser(res.locals.userData.id);
+    const id = res.locals.userData.id;
+    console.log(id);
+    let orders = await controller.getDataOrder(id);
 
-    console.log(res.locals.userData.id)
     console.log("Orders: " + JSON.stringify(orders))
-
+    orders = [orders];
     orders = orders.map((v) => {
         // Calculate itemCount
         v.itemCount = Object.values(v.products).map((v) => parseInt(v.quantity)).reduce((a, b) => a + b, 0);
