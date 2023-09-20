@@ -48,7 +48,7 @@ router.post('/orders/insert', retrieveUserInfo, async function(req, res, next) {
   const controller = new ProductController(res.locals.dburi,'orders');
   console.log(req.body);
   req.body.userId = res.locals.id;
-  const id = await controller.insertData(req.body);
+  const id = await controller.insertData({ ...req.body, time: new Date() });
   res.json(id).status(200);
 });
 
