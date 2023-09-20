@@ -84,11 +84,13 @@ const registerController = require('../controllers/register');
 const authController = require('../controllers/auth');
 const refreshTokenController = require('../controllers/refreshToken');
 const logoutController = require('../controllers/logout');
+const adminController = require('../controllers/makeAdmin');
 
 
 router.post('/register', registerController.handleNewUser);
 router.post('/auth', authController.handleLogin);
 router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
+router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
 
 module.exports = router;
