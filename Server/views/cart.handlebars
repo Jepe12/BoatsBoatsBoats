@@ -105,8 +105,6 @@ async function confirmOrder() {
 
     confirmButton.textContent = 'Loading...';
 
-    const time = new Date();
-
     let res = await sendRequest('/orders/insert', 'POST', {
         products: [
             {{#each cartList}}
@@ -117,8 +115,7 @@ async function confirmOrder() {
             },
             {{/each}}
         ],
-        total: {{total}},
-        time: {{time}}
+        total: {{total}}
     });
 
     if (res.status == 200) {
