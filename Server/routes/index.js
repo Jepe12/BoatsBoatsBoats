@@ -97,19 +97,19 @@ router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.ma
 const passport = require('passport');
 require('../controllers/googleAuth');
 
-router.get('/google', async (req,res) => {
+router.get('/google', async (req,res) => { // Might not need this as an entry point? Needs to look better anyway
     res.send('<a href="/auth/google">Authenticate with Google</a>')
 })
 
-router.get('/auth/google',
+router.get('/auth/google', // Entry point to Google Auth
   passport.authenticate('google', { scope:
       [ 'email', 'profile' ] }
 ));
 
-router.get( '/auth/google/callback',
+router.get( '/google/callback', // Callback if auth successful
     passport.authenticate( 'google', {
-        successRedirect: '/auth/google/success',
-        failureRedirect: '/auth/google/failure'
+        successRedirect: '/auth/google/success', // Should be home page? But with the refresh token added & user authenticated
+        failureRedirect: '/auth/google/failure' // Where do we want this to go? Back to home screen as well but with no user info added? This will be handled in the googleAuth controller? 
 }));
 
 
