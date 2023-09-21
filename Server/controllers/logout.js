@@ -22,7 +22,7 @@ const handleLogout = async (req, res) => {
     // Delete the refreshToken in the DB 
     await controller.deleteToken(foundUser.username);
     
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true, }) // To make sure this only occurs via https: Set secure: true - Only serves on https
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true }) // To make sure this only occurs via https: Set secure: true - Only serves on https
     res.sendStatus(204);// Setting "secure: true" in cookie will mean it only can be sent via https! Mess up testing etc
 }
 
