@@ -41,3 +41,20 @@
 .nav-link {
     cursor: pointer;
 }
+
+footer {
+    width: 100vw;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+footer .container {
+    width: min(800px, 80vw);
+    border-top: rgba(180, 180, 180, 0.2) 1px solid;
+    padding-top: 30px;
+}
+
+footer .container a {
+    color: rgb(var(--bs-primary-rgb));
+    text-decoration: none;
+}

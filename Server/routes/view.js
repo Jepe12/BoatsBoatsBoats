@@ -69,6 +69,10 @@ router.get('/products/new', retrieveUserInfo, async function(req, res) {
     res.render("product_edit", { creation: true, user: res.locals.userData, product: { name: "New Product", imgUrl: "/assets/boats/Add.png", description: "Fill out description", price: 14.99 } });
 });
 
+router.get('/privacy', retrieveUserInfo, async function(req, res) {
+    res.render("privacy", { user: res.locals.userData });
+});
+
 router.get('/cart', retrieveUserInfo, async function(req, res) {
     let cart = {};
     let cartSize = undefined;
