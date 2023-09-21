@@ -56,7 +56,7 @@ router.get('/register', retrieveUserInfo, function(req, res) {
     res.render("register", { layout: 'basic', user: res.locals.userData });
 });
 
-router.get('/reset', requireJWT, function(req, res) {
+router.get('/reset', function(req, res) {
     res.render("passwordReset", { layout: 'basic' });
 });
 

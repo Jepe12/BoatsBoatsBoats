@@ -1,7 +1,7 @@
 const safeOrigins = [
     'https://www.ourwebsite.com', // Wherever the website ends up
     'http://127.0.0.1:5500', // Whichever port front end is running on
-    'http://localhost:3000' // Backend port
+    'http://localhost:3000', // Backend port
 ];
 
 module.exports = safeOrigins;

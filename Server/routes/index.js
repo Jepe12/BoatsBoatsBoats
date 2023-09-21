@@ -84,7 +84,7 @@ const authController = require('../controllers/auth');
 const refreshTokenController = require('../controllers/refreshToken');
 const logoutController = require('../controllers/logout');
 const sendResetPasswordController = require('../controllers/sendResetPassword');
-
+const adminController = require('../controllers/makeAdmin');
 
 router.post('/register', registerController.handleNewUser);
 router.post('/auth', authController.handleLogin);
@@ -92,5 +92,29 @@ router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 router.post('/sendResetPassword', sendResetPasswordController.sendResetPassword)
 router.post('/resetPassword', () => console.log('todo by some kind stranger'));
+router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
+
+
+
+// Google OAuth 
+const passport = require('passport');
+require('../controllers/googleAuth');
+
+router.get('/google', async (req,res) => { // Might not need this as an entry point? Needs to look better anyway
+    res.send('<a href="/auth/google">Authenticate with Google</a>')
+})
+
+router.get('/auth/google', // Entry point to Google Auth
+  passport.authenticate('google', { scope:
+      [ 'email', 'profile' ] }
+));
+
+router.get( '/google/callback', // Callback if auth successful
+    passport.authenticate( 'google', {
+        successRedirect: '/auth/google/success', // Should be home page? But with the refresh token added & user authenticated
+        failureRedirect: '/auth/google/failure' // Where do we want this to go? Back to home screen as well but with no user info added? This will be handled in the googleAuth controller? 
+}));
+
+
 
 module.exports = router;
