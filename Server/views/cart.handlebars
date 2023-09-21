@@ -19,12 +19,18 @@
     background-color: #fafafa;
 }
 
-.products .product img {
+.products .product .img {
     border-radius: 10px;
     max-width: 100%;
     margin-bottom: 10px;
     height: 140px;
+    width: 200px;
     margin-right: 20px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-color: rgb(248, 248, 248);
+    background-repeat: no-repeat;
 }
 
 .quantity {
@@ -47,7 +53,7 @@
         <div class="col-md-8">
             {{#each cartList}}
             <div class="product">
-                <img src="{{ this.imgUrl }}">
+                <div class="img" style="background-image: url({{ this.imgUrl }})"></div>
                 <div class="col">
                     <h5 class="card-title my-4">{{ this.name }}</h5>
                     <div class="row pe-2">

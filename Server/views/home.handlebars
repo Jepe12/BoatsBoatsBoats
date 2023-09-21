@@ -32,10 +32,16 @@ h1 {
     background-color: #fafafa;
 }
 
-.products .product img {
+.products .product .img {
     border-radius: 5px;
     max-width: 100%;
     margin-bottom: 10px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-color: rgb(248, 248, 248);
+    background-repeat: no-repeat;
 }
 
 .products .edit {
@@ -71,7 +77,7 @@ h1 {
 <div class="products mx-auto">
     {{#each products}}
     <div class="product">
-        <img src="{{ this.imgUrl }}" alt="Product Image">
+        <div class="img" style="background-image: url({{ this.imgUrl }})"></div>
         <div>
             <div class="row">
                 <h5 class="card-title">{{ this.name }}</h5>
@@ -87,7 +93,7 @@ h1 {
     {{/each}}
     {{#if admin}}
     <div class="product">
-        <img src="/assets/boats/Add.png" alt="Add image">
+        <div class="img" style="background-image: url(/assets/boats/Add.png)"></div>
         <div>
             <div class="row">
                 <h5 class="card-title">Add New product</h5>
@@ -102,6 +108,14 @@ h1 {
 <script>
 
 function addToCart(productId) {
+
+    {{#if (not user)}}
+
+    window.location = '/login';
+    return;
+
+    {{/if}}
+
     if (CookiesHelper.readCookie("cart") == undefined) {
         // Create cart
         CookiesHelper.createCookie("cart", "{}")
