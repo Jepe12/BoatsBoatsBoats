@@ -106,7 +106,16 @@ router.get('/cart', retrieveUserInfo, async function(req, res) {
 
     let gst = total * 0.15;
 
-    res.render("cart", { cartList, user: res.locals.userData?.username, total: total.toFixed(2), gst: gst.toFixed(2), cartSize });
+    // Get recommendations, a list of products
+    let recommendations = await controller.getAllData();
+
+    // Fake it
+    recommendations = [...recommendations, ...recommendations, ...recommendations]
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value)
+
+    res.render("cart", { cartList, user: res.locals.userData?.username, total: total.toFixed(2), gst: gst.toFixed(2), cartSize, recommendations });
 });
 
 
