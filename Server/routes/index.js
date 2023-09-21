@@ -83,11 +83,14 @@ const registerController = require('../controllers/register');
 const authController = require('../controllers/auth');
 const refreshTokenController = require('../controllers/refreshToken');
 const logoutController = require('../controllers/logout');
+const sendResetPasswordController = require('../controllers/sendResetPassword');
 
 
 router.post('/register', registerController.handleNewUser);
 router.post('/auth', authController.handleLogin);
 router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
+router.post('/sendResetPassword', sendResetPasswordController.sendResetPassword)
+router.post('/resetPassword', () => console.log('todo by some kind stranger'));
 
 module.exports = router;
