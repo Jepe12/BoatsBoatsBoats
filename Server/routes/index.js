@@ -85,11 +85,33 @@ const refreshTokenController = require('../controllers/refreshToken');
 const logoutController = require('../controllers/logout');
 const adminController = require('../controllers/makeAdmin');
 
-
 router.post('/register', registerController.handleNewUser);
 router.post('/auth', authController.handleLogin);
 router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
+
+
+
+// Google OAuth 
+const passport = require('passport');
+require('../controllers/googleAuth');
+
+router.get('/google', async (req,res) => {
+    res.send('<a href="/auth/google">Authenticate with Google</a>')
+})
+
+router.get('/auth/google',
+  passport.authenticate('google', { scope:
+      [ 'email', 'profile' ] }
+));
+
+router.get( '/auth/google/callback',
+    passport.authenticate( 'google', {
+        successRedirect: '/auth/google/success',
+        failureRedirect: '/auth/google/failure'
+}));
+
+
 
 module.exports = router;

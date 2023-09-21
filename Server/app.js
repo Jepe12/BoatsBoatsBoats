@@ -12,6 +12,8 @@ var indexRouter = require('./routes/index');
 
 var app = express();
 
+
+
 // Handle the options credentials check - Before any potential CORS & fetch cookies credential requirement 
 app.use(credentials);
 
