@@ -42,11 +42,18 @@ router.get('/login', retrieveUserInfo, function(req, res) {
         return;
     }
 
-    res.render("login", { layout: 'basic', user: req.user });
+    res.render("login", { layout: 'basic', user: res.locals.userData });
 });
 
-router.get('/register', function(req, res) {
-    res.render("register", { layout: 'basic', user: req.user });
+router.get('/register', retrieveUserInfo, function(req, res) {
+
+    // If they already have user data, they dont need to register
+    if (res.locals.userData) {
+        res.redirect(303, '/');
+        return;
+    }
+
+    res.render("register", { layout: 'basic', user: res.locals.userData });
 });
 
 router.get('/products/:productId/edit', retrieveUserInfo, async function(req, res) {
@@ -55,11 +62,11 @@ router.get('/products/:productId/edit', retrieveUserInfo, async function(req, re
 
     const controller = new ProductController(res.locals.dburi,'products');
     const product = await controller.getData(req.params.productId);
-    res.render("product_edit", { product, user: req.user });
+    res.render("product_edit", { product, user: res.locals.userData });
 });
 
-router.get('/products/new', async function(req, res) {
-    res.render("product_edit", { creation: true, user: req.user, product: { name: "New Product", imgUrl: "/assets/boats/Add.png", description: "Fill out description", price: 14.99 } });
+router.get('/products/new', retrieveUserInfo, async function(req, res) {
+    res.render("product_edit", { creation: true, user: res.locals.userData, product: { name: "New Product", imgUrl: "/assets/boats/Add.png", description: "Fill out description", price: 14.99 } });
 });
 
 router.get('/cart', retrieveUserInfo, async function(req, res) {
@@ -144,7 +151,6 @@ router.get('/order', retrieveUserInfo, async function(req, res) {
     let orders = await controller.getDataOrder(id);
 
     console.log("Orders: " + JSON.stringify(orders))
-    orders = [orders];
     orders = orders.map((v) => {
         // Calculate itemCount
         v.itemCount = Object.values(v.products).map((v) => parseInt(v.quantity)).reduce((a, b) => a + b, 0);

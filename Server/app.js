@@ -71,6 +71,9 @@ const hbs = expressHandlebars.create({
     },
     toLocaleDateString: (arg1, arg2, options) => {
       return arg1.toLocaleDateString();
+    },
+    not: (arg1, arg2, options) => {
+      return !arg1;
     }
   }
 });

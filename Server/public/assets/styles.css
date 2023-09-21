@@ -37,3 +37,7 @@
     font-size: 24px;
     color: #424242;
 }
+
+.nav-link {
+    cursor: pointer;
+}

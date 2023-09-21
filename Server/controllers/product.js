@@ -20,7 +20,7 @@ class ProductController {
     }
 
     async getDataOrder(user) {
-        return await this.collection.findOne({userId: user})
+        return await this.collection.find({userId: user}).toArray()
     }
 
     async getDataUser(user) {
@@ -43,7 +43,7 @@ class ProductController {
     async replaceData(id, data) {
         delete data.id;
         await this.collection.updateOne(
-            {id: parseInt(id)},
+            { _id: new ObjectId(id) },
             {
                 $set: data
             },
@@ -56,7 +56,7 @@ class ProductController {
       }
 
     async deleteData(id) {
-        return (await this.collection.deleteOne({id: parseInt(id)})).deletedCount >= 1;
+        return (await this.collection.deleteOne({ _id: new ObjectId(id) },)).deletedCount >= 1;
     }
 
     async deleteToken(username) {

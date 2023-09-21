@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col">
             {{#each orders}}
-            <a class="product text-decoration-none" href="/order/{{id}}">
+            <a class="product text-decoration-none" href="/order/{{_id}}">
                 <h5 class="card-title my-4">{{ toLocaleDateString this.time }} - ${{ this.total }}</h5>
                 <div class="flex-grow-1 w-auto"></div>
                 <span class="w-auto vertical-align item-count">{{ this.itemCount }} Items</span>

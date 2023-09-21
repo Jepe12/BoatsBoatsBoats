@@ -1,4 +1,4 @@
-async function sendRequest(url, method, body, ignore401) {
+async function sendRequest(url, method, body, ignore403) {
     let settings = { method, body: JSON.stringify(body), headers: {} };
 
     if (method != 'get') {
@@ -14,7 +14,7 @@ async function sendRequest(url, method, body, ignore401) {
 
     let res = await fetch(url, settings);
 
-    if (res.status == 401 && !ignore401) {
+    if (res.status == 403 && !ignore403) {
         console.log("Unauthorized, refreshing token");
         
         // Unauthorized, refresh token
