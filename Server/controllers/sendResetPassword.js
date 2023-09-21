@@ -1,6 +1,6 @@
 var ProductController = require('./product');
 var nodemailer = require('nodemailer');
-var directTransport = require('nodemailer-direct-transport');
+const nodemailerSendgrid = require('nodemailer-sendgrid');
 
 const sendResetPassword = async (req, res) => {
 
@@ -21,12 +21,16 @@ const sendResetPassword = async (req, res) => {
     // Need to store final url in a config variable, then construct url
     let link = 'https://localhost/reset/' + 1234;
 
-    var transporter = nodemailer.createTransport(directTransport({}));
+    var transporter = nodemailer.createTransport(
+        nodemailerSendgrid({
+            apiKey: process.env.SENDGRID_API_KEY
+         })
+    );
 
     console.log("Started sending");
 
     transporter.sendMail({
-        from: 'noreply@boatsboatsboats.com',
+        from: 'fyoolawfbewjtfeejn@cwmxc.com',
         to: req.body.username,
         subject: 'Password reset link',
         text: 'Link: ' + link
