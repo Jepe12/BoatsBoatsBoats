@@ -13,6 +13,11 @@ const handleNewUser = async (req, res) => {
         return res.status(409).json({ 'message': 'Invalid Email Format' })
     }
 
+    // Check password strengh sufficient
+    if (evaluatePasswordStrength(pwd) !== 'Password meets all criteria.'){
+        return res.status(400).json({ 'message': evaluatePasswordStrength(pwd) });
+    }
+
     // Check for duplicate usernames in DB
     const duplicate = await controller.getDataUser(user);
     //if(dup)
@@ -40,10 +45,42 @@ const handleNewUser = async (req, res) => {
 }
 
 
+// Func to check email validity
 function isValidEmail(email) {
     const emailRegex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;;
     return emailRegex.test(email);
 }
 
 
+// Func to check password strength, if password too weak returns status code 
+function evaluatePasswordStrength(password) {
+    
+    const lengthRegex = /^.{8,}$/; // At least 8 characters
+    const lowercaseRegex = /[a-z]/; // At least one lowercase letter
+    const uppercaseRegex = /[A-Z]/; // At least one uppercase letter
+    const digitRegex = /\d/; // At least one digit
+    const specialCharRegex = /[!@#\$%\^&\*\(\)_+\{\}\[\]:;<>,\.\?~\\\-=/|"'`]/;
+  
+    const isLengthValid = lengthRegex.test(password);
+    const hasLowercase = lowercaseRegex.test(password);
+    const hasUppercase = uppercaseRegex.test(password);
+    const hasDigit = digitRegex.test(password);
+    const hasSpecialChar = specialCharRegex.test(password);
+  
+    const missingCriteria = [];
+  
+    if (!isLengthValid) missingCriteria.push("at least 8 characters");
+    if (!hasLowercase) missingCriteria.push("at least one lowercase letter");
+    if (!hasUppercase) missingCriteria.push("at least one uppercase letter");
+    if (!hasDigit) missingCriteria.push("at least one digit");
+    if (!hasSpecialChar) missingCriteria.push("at least one special character");
+  
+    if (missingCriteria.length === 0) {
+      return "Password meets all criteria.";
+    } else {
+      return `Password is missing the following criteria: ${missingCriteria.join(", ")}.`;
+    }
+  }
+  
+  
 module.exports = { handleNewUser }
