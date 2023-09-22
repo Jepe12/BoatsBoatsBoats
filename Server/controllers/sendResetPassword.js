@@ -62,20 +62,21 @@ const sendResetPassword = async (req, res) => {
 
 const setResetPassword = async (req, res) => {
     const controller = new ProductController(res.locals.dburi,'resets');
-    const foundUser = await controller.getDataCode(req.params.code);
-    if (!foundUser) return res.status(401).json({ message: 'Unauthorized' });  
+    const foundReset = await controller.getDataCode(req.body.code);
+    if (!foundReset) return res.status(401).json({ message: 'Unauthorized' });  
     const controller2 = new ProductController(res.locals.dburi,'users');
     const hashedPwd = await bcrypt.hash(req.body.password, 10);
-    console.log(foundUser.username);
-    console.log(hashedPwd);
     const updatedUser = {
-        'username': foundUser.username,
+        'username': foundReset.username,
         'password': hashedPwd,
     }
-    const success = await controller2.replaceData(res.locals.userData.id,updatedUser);
+    console.log(updatedUser);
+    const user = await controller2.getDataUser(foundReset.username);
+    console.log(user);
+    const success = await controller2.replaceData(user._id,updatedUser);
     if (success) {
       res.json({ message: 'success' }).status(200);
-      const deleted = await controller.deleteData(foundUser._id);
+      const deleted = await controller.deleteData(user._id.toString());
 
     } else {
       res.json({ message: 'no record found' }).status(404);

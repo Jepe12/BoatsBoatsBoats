@@ -91,7 +91,7 @@ router.post('/auth', authController.handleLogin);
 router.get('/refresh',refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 router.post('/sendResetPassword', sendResetPasswordController.sendResetPassword)
-router.post('/resetPassword', retrieveUserInfo, () => sendResetPasswordController.setResetPassword);
+router.post('/resetPassword', retrieveUserInfo,sendResetPasswordController.setResetPassword);
 router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
 
 
