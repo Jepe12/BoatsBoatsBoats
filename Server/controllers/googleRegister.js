@@ -21,6 +21,15 @@ const handleGoogleRegister = async (req, res) => {
     if (foundUser){
         // Authenticate
         console.log("User exists: " + foundUser)
+
+        const loginData = {
+            user: email, 
+            pwd: "GOOGLE" 
+        }; 
+
+        const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
+
+        console.log(foundUser)
         
     }
 
@@ -41,8 +50,14 @@ const handleGoogleRegister = async (req, res) => {
         } catch (err) {
             res.status(500).json({ 'message': err.message });
         }
-        // Authenticate using axios? 
-     
+        // Authenticate
+
+        const loginData = {
+            user: email, 
+            pwd: "GOOGLE" 
+        }; 
+
+        const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
 
     }
 }
