@@ -119,7 +119,7 @@ router.get('/google/callback', passport.authenticate('google', {
 router.get('/auth/google/success', (req, res) => {
   try {
     googleRegisterController.handleGoogleRegister(req, res)
-    res.send('Authentication successful.'); // DO I need to send this? 
+    res.send('Authentication successful.'); // DO I need to send this? May be required to redirect properly? 
     // Redirect here? 
   } catch (error) {
     res.status(500).send('Internal Server Error'); // SHouyld be json
