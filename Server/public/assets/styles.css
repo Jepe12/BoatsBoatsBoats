@@ -1,5 +1,10 @@
 :root {
     --bs-primary-rgb: 125, 105, 209;
+    --bs-link-color-rgb: 125, 105, 209;
+}
+
+a:hover {
+    --bs-link-color-rgb: 105, 85, 189;
 }
 
 .btn-primary {

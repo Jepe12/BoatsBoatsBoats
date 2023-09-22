@@ -56,6 +56,14 @@ router.get('/register', retrieveUserInfo, function(req, res) {
     res.render("register", { layout: 'basic', user: res.locals.userData });
 });
 
+router.get('/reset', function(req, res) {
+    res.render("passwordReset", { layout: 'basic' });
+});
+
+router.get('/reset/:code', function(req, res) {
+    res.render("passwordResetCode", { layout: 'basic', code: req.params.code });
+});
+
 router.get('/products/:productId/edit', retrieveUserInfo, async function(req, res) {
     // Disable caching
     res.set('Cache-Control', 'no-store');
