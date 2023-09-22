@@ -70,9 +70,7 @@ const setResetPassword = async (req, res) => {
         'username': foundReset.username,
         'password': hashedPwd,
     }
-    console.log(updatedUser);
     const user = await controller2.getDataUser(foundReset.username);
-    console.log(user);
     const success = await controller2.replaceData(user._id,updatedUser);
     if (success) {
       res.json({ message: 'success' }).status(200);
