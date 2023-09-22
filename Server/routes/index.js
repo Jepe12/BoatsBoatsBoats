@@ -77,7 +77,10 @@ router.delete('/orders/:id', async function (req, res, next) {
   }
 });
 
-// User Authentication & Registration:
+
+/**********************************************
+ *     User Authentication & Registration     *
+ **********************************************/
 
 const registerController = require('../controllers/register');
 const authController = require('../controllers/auth');
@@ -96,16 +99,17 @@ router.put('/admin', verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.m
 
 
 
-// Google OAuth 
+/**********************************************
+ *                   OAuth                    *
+ **********************************************/
+
 const passport = require('passport');
 require('../controllers/googleAuth');
-
-
 
 // Google OAuth - Entry point to Google Auth redirect
 router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
-// Callback if auth successful
+// Callback route
 router.get('/google/callback', passport.authenticate('google', {
   successRedirect: '/auth/google/success',
   failureRedirect: '/auth/google/failure'
@@ -114,16 +118,12 @@ router.get('/google/callback', passport.authenticate('google', {
 // Handle the SUCCESS redirect route
 router.get('/auth/google/success', (req, res) => {
   try {
-    // Access the user profile from the Passport.js session
     const user = req.user;
-    // You can access user properties, such as email, as needed
-    const email = user.email; // Example: Extract the email from the profile
-    console.log(email)
+    const email = user.email; 
 
-    res.send('Authentication successful.');
+    res.send('Authentication successful.'); // DO I need to send this? 
   } catch (error) {
-    // Handle errors as needed
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Internal Server Error'); // SHouyld be json
   }
 });
 
