@@ -101,8 +101,6 @@ async function saveProduct() {
         imgUrl
     }
 
-    console.log(product)
-
     try {
         {{#if creation}}
         let res = await sendRequest('/product/insert', 'post', product)

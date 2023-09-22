@@ -11,11 +11,20 @@ router.get('/recommendations', verifyJWT, async function(req, res) {
         return;
     }
 
-    let result = await sendRequest(process.env.RECOMMENDATION_SERVICE_URL + '/getRecommendations', 'POST', { username: req.user });
+    try {
+        let result = await sendRequest(process.env.RECOMMENDATION_SERVICE_URL + '/getRecommendations', 'POST', { username: req.user });
 
-    console.log(result)
+        const recommendations = await result.json();
+        console.log(recommendations
 
-    res.status(200).json([])
+        )
+
+        res.render("recommendations", { recommendations, layout: 'blank' })
+    } catch (e) {
+        console.error("Failed connecting to Recommendation microservice: " + e);
+        res.status(500).json({ message: 'Internal Server Error' })
+        return;
+    }
 });
 
 module.exports = router;

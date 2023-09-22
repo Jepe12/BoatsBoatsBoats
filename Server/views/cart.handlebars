@@ -128,20 +128,8 @@
             </div>
         {{/if}}
     </div>
-    <div class="row mt-5">
-        <h5 class="mb-5">Have you considered?</h5>
-        <div class="recommendations">
-            {{#each recommendations}}
-            <div class="recommend" onclick="addToCart('{{this._id}}')">
-                <div class="img" style="background-image: url({{ this.imgUrl }})"></div>
-                <div class="details">
-                    <h5 class="card-title">{{ this.name }}</h5>
-                    <div class="flex-grow-1"></div>
-                    <span>${{ this.price }}</span>
-                </div>
-            </div>
-            {{/each}}
-        </div>
+    <div class="row mt-5" id="recommendations">
+        
     </div>
     {{#if (empty cartList)}}
     <h6>Cart Empty</h6>
@@ -149,6 +137,7 @@
     {{/if}}
 </div>
 
+{{#if cartList}}
 <script>
 
 let confirmButton = document.getElementById("confirm-button");
@@ -207,15 +196,16 @@ function updateQuantity(productId, event) {
     location.reload();
 }
 
-function addToCart(productId) {
-    // product id -> quantity mapper
-    let cart = JSON.parse(CookiesHelper.readCookie("cart"))
+// Load recommendations
+async function loadRecommendations() {
+    let res = await sendRequest('/recommendations', 'GET');
 
-    cart[productId] = 1;
+    let test = await res.text();
 
-    CookiesHelper.createCookie("cart", JSON.stringify(cart));
-
-    location.reload();
+    window.recommendations.innerHTML = test;
 }
+loadRecommendations();
 
 </script>
+
+{{/if}}

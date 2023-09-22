@@ -63,7 +63,6 @@ router.get('/reset', function(req, res) {
 router.get('/reset/:code', async function(req, res) {
     const controller = new ProductController(res.locals.dburi,'resets');
     const foundUser = await controller.getDataCode(req.params.code);
-    console.log(foundUser)
     if (!foundUser) return res.status(401).json({ message: 'Unauthorized' }); 
     res.render("passwordResetCode", { layout: 'basic', code: req.params.code });
 });
@@ -118,16 +117,7 @@ router.get('/cart', retrieveUserInfo, async function(req, res) {
 
     let gst = total * 0.15;
 
-    // Get recommendations, a list of products
-    let recommendations = await controller.getAllData();
-
-    // Fake it
-    recommendations = [...recommendations, ...recommendations, ...recommendations]
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value)
-
-    res.render("cart", { cartList, user: res.locals.userData?.username, total: total.toFixed(2), gst: gst.toFixed(2), cartSize, recommendations });
+    res.render("cart", { cartList, user: res.locals.userData?.username, total: total.toFixed(2), gst: gst.toFixed(2), cartSize });
 });
 
 
@@ -172,10 +162,8 @@ router.get('/order', retrieveUserInfo, async function(req, res) {
     const controller = new ProductController(res.locals.dburi, 'orders');
 
     const id = res.locals.userData.id;
-    console.log(id);
     let orders = await controller.getDataOrder(id);
 
-    console.log("Orders: " + JSON.stringify(orders))
     orders = orders.map((v) => {
         // Calculate itemCount
         v.itemCount = Object.values(v.products).map((v) => parseInt(v.quantity)).reduce((a, b) => a + b, 0);
