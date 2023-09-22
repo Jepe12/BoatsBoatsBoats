@@ -34,7 +34,7 @@ const sendResetPassword = async (req, res) => {
 
 
     // Need to store final url in a config variable, then construct url
-    let link = 'http://localhost:3000/reset/' + token;
+    let link = process.env.HOSTED_URL + "/reset/" + token;
 
     var transporter = nodemailer.createTransport(
         nodemailerSendgrid({
