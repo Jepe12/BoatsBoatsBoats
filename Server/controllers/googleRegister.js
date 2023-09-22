@@ -20,18 +20,25 @@ const handleGoogleRegister = async (req, res) => {
     // If User already in DB --> Authenticate GoogleUser
     if (foundUser){
         // Authenticate
-        console.log("User exists: " + foundUser)
+        console.log("USER EXISTS")
 
         const loginData = {
             user: email, 
             pwd: "GOOGLE" 
         }; 
 
-        const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
-
+        try {
+            const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
+            
+          } catch (error) {
+            console.log("Badbadbad")
+          }
+        
         console.log(foundUser)
         
     }
+
+
 
     // If user not in DB --> Register & Authenticate GoogleUser
     if (!foundUser){
@@ -57,8 +64,12 @@ const handleGoogleRegister = async (req, res) => {
             pwd: "GOOGLE" 
         }; 
 
-        const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
-
+        try {
+            const loginResponse = await axios.post('http://localhost:3000/auth', loginData);
+            // Handle success and user data here
+          } catch (error) {
+            // Handle errors here, e.g., log the error or send an error response
+          }
     }
 }
 

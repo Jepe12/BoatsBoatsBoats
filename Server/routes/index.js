@@ -116,11 +116,10 @@ router.get('/google/callback', passport.authenticate('google', {
 }));
 
 // Handle the SUCCESS redirect route
-router.get('/auth/google/success', (req, res) => {
+router.get('/auth/google/success', async(req, res) => {
   try {
-    googleRegisterController.handleGoogleRegister(req, res)
-    res.send('Authentication successful.'); // DO I need to send this? May be required to redirect properly? 
-    // Redirect here? 
+    await googleRegisterController.handleGoogleRegister(req, res)
+    res.redirect('/');
   } catch (error) {
     res.status(500).send('Internal Server Error'); // SHouyld be json
   }
