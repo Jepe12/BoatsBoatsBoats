@@ -8,13 +8,15 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/google/callback",
   passReqToCallback: true
-}, async function (profile, done) {
+}, async function (request, accessToken, refreshToken, profile, done) {
   try {
+    
     return done(null, profile);
   } catch (error) {
-    done(error);
+    return done(error); 
   }
 }));
+
 
 passport.serializeUser((user, done) => {
   done(null, user);

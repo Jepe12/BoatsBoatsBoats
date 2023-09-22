@@ -120,7 +120,7 @@ router.get('/auth/google/success', (req, res) => {
   try {
     const user = req.user;
     const email = user.email; 
-
+    console.log(user)
     res.send('Authentication successful.'); // DO I need to send this? 
   } catch (error) {
     res.status(500).send('Internal Server Error'); // SHouyld be json
