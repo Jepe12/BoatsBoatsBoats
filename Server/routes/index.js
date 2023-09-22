@@ -102,9 +102,9 @@ router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.ma
 /**********************************************
  *                   OAuth                    *
  **********************************************/
-
+const googleRegisterController = require('../controllers/googleRegister');
 const passport = require('passport');
-require('../controllers/googleAuth');
+require('../controllers/googleAPI');
 
 // Google OAuth - Entry point to Google Auth redirect
 router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
@@ -118,10 +118,9 @@ router.get('/google/callback', passport.authenticate('google', {
 // Handle the SUCCESS redirect route
 router.get('/auth/google/success', (req, res) => {
   try {
-    const user = req.user;
-    const email = user.email; 
-    console.log(user)
+    googleRegisterController.handleGoogleRegister(req, res)
     res.send('Authentication successful.'); // DO I need to send this? 
+    // Redirect here? 
   } catch (error) {
     res.status(500).send('Internal Server Error'); // SHouyld be json
   }
