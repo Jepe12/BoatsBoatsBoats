@@ -29,9 +29,8 @@ app.use(passport.session());
 // Handle the options credentials check - Before any potential CORS & fetch cookies credential requirement 
 app.use(credentials);
 
-var mongoURI = "mongodb+srv://Restful_Knights:hS7jb2tVdrN3RBfz@nwen304cluster.snhsycw.mongodb.net/?retryWrites=true&w=majority"
 
-mongoose.connect(mongoURI, {
+mongoose.connect(process.env.DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -47,7 +46,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.locals.dburi = mongoURI;
+  res.locals.dburi = process.env.DB_URI;
   next();
 })
 

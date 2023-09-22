@@ -74,7 +74,7 @@ const setResetPassword = async (req, res) => {
     const success = await controller2.replaceData(user._id,updatedUser);
     if (success) {
       res.json({ message: 'success' }).status(200);
-      const deleted = await controller.deleteData(user._id.toString());
+      const deleted = await controller.deleteData(foundReset._id.toString());
 
     } else {
       res.json({ message: 'no record found' }).status(404);
