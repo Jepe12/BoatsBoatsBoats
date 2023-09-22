@@ -3,25 +3,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mongoose = require('mongoose');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 
 var app = express();
 
-let dbConnection;
-mongoose.connect(process.env.DB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then((value) => {
-  console.log('Connected to MongoDB');
-  dbConnection = value;
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-});
+const dbConnection = new MongoClient(process.env.DB_URI);
+const db = dbConnection.db('shop');
+const dbProducts = db.collection('products');
+console.log('Connected to MongoDB');
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -29,6 +21,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.locals.dbConn = dbConnection;
+  res.locals.db = db;
+  res.locals.dbProducts = dbProducts;
   next();
 })
 

@@ -11,13 +11,17 @@ router.get('/recommendations', verifyJWT, async function(req, res) {
         return;
     }
 
+    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+    const userData = {
+        username: req.user,
+        ip
+    };
+
     try {
-        let result = await sendRequest(process.env.RECOMMENDATION_SERVICE_URL + '/getRecommendations', 'POST', { username: req.user });
+        let result = await sendRequest(process.env.RECOMMENDATION_SERVICE_URL + '/getRecommendations', 'POST', userData);
 
         const recommendations = await result.json();
-        console.log(recommendations
-
-        )
 
         res.render("recommendations", { recommendations, layout: 'blank' })
     } catch (e) {
