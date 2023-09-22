@@ -9,20 +9,20 @@ const ROLES_LIST = require('../config/rolesList');
 const verifyRoles = require('../middleware/verifyRoles');
 const retrieveUserInfo = require('../middleware/retrieveUserInfo');
 
-router.post('/product/insert', async function(req, res, next) { 
-  const controller = new ProductController(res.locals.dburi,'products');
+router.post('/product/insert', async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'products');
   const id = await controller.insertData(req.body)
   res.json(id).status(200);
 });
 
-router.put('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin), async function(req, res, next) { // Admin access required verifyRoles arg specifies which roles can access it, user will only need one to match.
-  const controller = new ProductController(res.locals.dburi,'products');
+router.put('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin), async function (req, res, next) { // Admin access required verifyRoles arg specifies which roles can access it, user will only need one to match.
+  const controller = new ProductController(res.locals.dburi, 'products');
   await controller.replaceData(req.params.id, req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin, ROLES_LIST.User), async function(req, res, next) { // User access only    // verifyJWT added for testing, requires auth token to access end point. verifyRole() passing in whichever role we want to be able to access this end point, method checks that client has permissions
-  const controller = new ProductController(res.locals.dburi,'products');
+router.get('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin, ROLES_LIST.User), async function (req, res, next) { // User access only    // verifyJWT added for testing, requires auth token to access end point. verifyRole() passing in whichever role we want to be able to access this end point, method checks that client has permissions
+  const controller = new ProductController(res.locals.dburi, 'products');
 
   const data = await controller.getData(req.params.id);
   if (data != null) {
@@ -33,8 +33,8 @@ router.get('/product/:id', verifyJWT, verifyRoles(ROLES_LIST.Admin, ROLES_LIST.U
 
 });
 
-router.delete('/product/:id', async function(req, res, next) {
-  const controller = new ProductController(res.locals.dburi,'products');
+router.delete('/product/:id', async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'products');
   const success = await controller.deleteData(req.params.id);
   if (success) {
     res.json({ message: 'success' }).status(200);
@@ -44,21 +44,21 @@ router.delete('/product/:id', async function(req, res, next) {
 });
 
 
-router.post('/orders/insert', retrieveUserInfo, async function(req, res, next) {
-  const controller = new ProductController(res.locals.dburi,'orders');
+router.post('/orders/insert', retrieveUserInfo, async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'orders');
   req.body.userId = res.locals.userData.id;
   const id = await controller.insertData({ ...req.body, time: new Date() });
   res.json(id).status(200);
 });
 
-router.put('/orders/:id', async function(req, res, next) {
-  const controller = new ProductController(res.locals.dburi,'orders');
+router.put('/orders/:id', async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'orders');
   await controller.replaceData(req.params.id, req.body)
   res.json({ message: 'success' }).status(200);
 });
 
-router.get('/orders/:id', async function(req, res, next) { 
-  const controller = new ProductController(res.locals.dburi,'orders');
+router.get('/orders/:id', async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'orders');
   const data = await controller.getData(req.params.id);
   if (data != null) {
     res.json(data).status(200);
@@ -67,8 +67,8 @@ router.get('/orders/:id', async function(req, res, next) {
   }
 });
 
-router.delete('/orders/:id', async function(req, res, next) {
-  const controller = new ProductController(res.locals.dburi,'orders');
+router.delete('/orders/:id', async function (req, res, next) {
+  const controller = new ProductController(res.locals.dburi, 'orders');
   const success = await controller.deleteData(req.params.id);
   if (success) {
     res.json({ message: 'success' }).status(200);
@@ -88,11 +88,11 @@ const adminController = require('../controllers/makeAdmin');
 
 router.post('/register', registerController.handleNewUser);
 router.post('/auth', authController.handleLogin);
-router.get('/refresh',refreshTokenController.handleRefreshToken);
+router.get('/refresh', refreshTokenController.handleRefreshToken);
 router.get('/logout', logoutController.handleLogout);
 router.post('/sendResetPassword', sendResetPasswordController.sendResetPassword)
 router.post('/resetPassword', () => console.log('todo by some kind stranger'));
-router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
+router.put('/admin', verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.makeAdmin);
 
 
 
@@ -100,21 +100,39 @@ router.put('/admin',verifyJWT, verifyRoles(ROLES_LIST.Admin), adminController.ma
 const passport = require('passport');
 require('../controllers/googleAuth');
 
-router.get('/google', async (req,res) => { // Might not need this as an entry point? Needs to look better anyway
-    res.send('<a href="/auth/google">Authenticate with Google</a>')
-})
 
-router.get('/auth/google', // Entry point to Google Auth
-  passport.authenticate('google', { scope:
-      [ 'email', 'profile' ] }
-));
 
-router.get( '/google/callback', // Callback if auth successful
-    passport.authenticate( 'google', {
-        successRedirect: '/auth/google/success', // Should be home page? But with the refresh token added & user authenticated
-        failureRedirect: '/auth/google/failure' // Where do we want this to go? Back to home screen as well but with no user info added? This will be handled in the googleAuth controller? 
+// Google OAuth - Entry point to Google Auth redirect
+router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'] }));
+
+// Callback if auth successful
+router.get('/google/callback', passport.authenticate('google', {
+  successRedirect: '/auth/google/success',
+  failureRedirect: '/auth/google/failure'
 }));
 
+// Handle the SUCCESS redirect route
+router.get('/auth/google/success', (req, res) => {
+  try {
+    // Access the user profile from the Passport.js session
+    const user = req.user;
+    // You can access user properties, such as email, as needed
+    const email = user.email; // Example: Extract the email from the profile
+    console.log(email)
 
+    res.send('Authentication successful.');
+  } catch (error) {
+    // Handle errors as needed
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Handle the FAILURE redirect route
+router.get('/auth/google/failure', (req, res) => {
+  
+  console.log("Failure")
+  // Handle authentication failure here
+  res.send('Authentication failed.');
+});
 
 module.exports = router;

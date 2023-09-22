@@ -6,11 +6,24 @@ var logger = require('morgan');
 var credentials = require('./middleware/credentials');
 var mongoose = require('mongoose'); // Import mongoose
 var expressHandlebars = require('express-handlebars');
+const session = require('express-session'); // Session
+const passport = require('passport'); // Passport for OAuth2
 
 var viewRouter = require('./routes/view');
 var indexRouter = require('./routes/index');
 
 var app = express();
+
+// Configure session middleware
+app.use(session({
+  secret: 'your-secret-key', // Replace with a better key? 
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Initialize Passport.js
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Handle the options credentials check - Before any potential CORS & fetch cookies credential requirement 
 app.use(credentials);
