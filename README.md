@@ -4,4 +4,8 @@
 
 Copy Server/example.env to Server/.env and fill out variables, then run
 
-`npm run dev`
+`cd Server/ && npm run dev`
+
+Then in a new terminal run
+
+`cd RecommendationService/ && npm run dev`

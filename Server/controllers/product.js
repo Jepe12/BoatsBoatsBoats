@@ -23,6 +23,10 @@ class ProductController {
         return await this.collection.find({userId: user}).toArray()
     }
 
+    async getDataCode(user) {
+        return await this.collection.findOne({code: user})
+    }
+
     async getDataUser(user) {
         return await this.collection.findOne({username: user})
     }
@@ -42,7 +46,7 @@ class ProductController {
 
     async replaceData(id, data) {
         delete data.id;
-        await this.collection.updateOne(
+        return await this.collection.updateOne(
             { _id: new ObjectId(id) },
             {
                 $set: data

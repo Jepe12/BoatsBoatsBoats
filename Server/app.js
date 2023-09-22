@@ -11,6 +11,7 @@ const passport = require('passport'); // Passport for OAuth2
 
 var viewRouter = require('./routes/view');
 var indexRouter = require('./routes/index');
+var recommendationRouter = require('./routes/recommendation');
 
 var app = express();
 
@@ -28,17 +29,8 @@ app.use(passport.session());
 // Handle the options credentials check - Before any potential CORS & fetch cookies credential requirement 
 app.use(credentials);
 
-var MongoStuff = require('mongodb-memory-server');
-
-// This will create an new instance of "MongoMemoryServer" and automatically start it
-//var mongod;
-
 var mongoURI = "mongodb+srv://Restful_Knights:hS7jb2tVdrN3RBfz@nwen304cluster.snhsycw.mongodb.net/?retryWrites=true&w=majority"
 
-//MongoStuff.MongoMemoryServer.create().then((v) => { 
-  //mongod = v;
-  //console.log('mongodb started')
-//});
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -97,6 +89,7 @@ app.set("view engine", "handlebars");
 app.set("views", path.resolve("./views"));
 
 app.use('/', viewRouter);
+app.use('/', recommendationRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
