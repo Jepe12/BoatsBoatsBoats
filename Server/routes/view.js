@@ -60,7 +60,11 @@ router.get('/reset', function(req, res) {
     res.render("passwordReset", { layout: 'basic' });
 });
 
-router.get('/reset/:code', function(req, res) {
+router.get('/reset/:code', async function(req, res) {
+    const controller = new ProductController(res.locals.dburi,'resets');
+    const foundUser = await controller.getDataCode(req.params.code);
+    console.log(foundUser)
+    if (!foundUser) return res.status(401).json({ message: 'Unauthorized' }); 
     res.render("passwordResetCode", { layout: 'basic', code: req.params.code });
 });
 
