@@ -2,7 +2,7 @@ const ProductController = require('../controllers/product');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-let controller = null; 
+let controller = null;
 
 const handleGoogleRegister = async (req, res) => {
     controller = new ProductController(res.locals.dburi, 'users');
@@ -19,7 +19,7 @@ const handleGoogleRegister = async (req, res) => {
 
     // If User already in DB --> Authenticate GoogleUser
     if (foundUser) {
-        
+
         // Authenticate
         const loginData = {
             user: email,
@@ -30,7 +30,7 @@ const handleGoogleRegister = async (req, res) => {
 
     // If user not in DB --> Register & Authenticate GoogleUser
     if (!foundUser) {
-        
+
         // Register
         try {
             const newUser = {
@@ -68,31 +68,26 @@ const handleGoogleLogin = async (req, res) => {
     // If we can't find it --> Unauthorized
     if (!foundUser) return res.status(401).json({ 'message': 'Authentication failed. Please provide valid credentials to access this webpage.' });
 
-    // Evaluate Password
-    const match = await bcrypt.compare(pwd, foundUser.password);
-    if (match) {
-        const roles = Object.values(foundUser.roles);
-        // Create JWT Normal & Refresh
-        const accessToken = jwt.sign(
-            { "UserInfo": { "username": foundUser.username, "roles": roles } },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '59s' }
-        );
-        const refreshToken = jwt.sign(
-            { "username": foundUser.username },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d' }
-        );
+    const roles = Object.values(foundUser.roles);
+    // Create JWT Normal & Refresh
+    const accessToken = jwt.sign(
+        { "UserInfo": { "username": foundUser.username, "roles": roles } },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: '59s' }
+    );
+    const refreshToken = jwt.sign(
+        { "username": foundUser.username },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: '1d' }
+    );
 
-        // Update the user's refreshToken in the DB
-        await controller.updateRefreshToken(foundUser.username, refreshToken);
+    // Update the user's refreshToken in the DB
+    await controller.updateRefreshToken(foundUser.username, refreshToken);
 
-        // Redirect with the access token as a query 
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000}); 
-        res.redirect(`/?accessToken=${accessToken}`);
-    } else {
-        res.status(401).json({ 'message': 'Authentication failed. Invalid password.' });
-    }
+    // Redirect with the access token as a query 
+    res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
+    res.redirect(`/?accessToken=${accessToken}`);
+
 };
 
 
