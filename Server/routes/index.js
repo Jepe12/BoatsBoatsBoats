@@ -117,12 +117,9 @@ router.get('/google/callback', passport.authenticate('google', {
 
 // Handle the SUCCESS redirect route
 router.get('/auth/google/success', async(req, res) => {
-  try {
-    await googleRegisterController.handleGoogleRegister(req, res)
-    res.redirect('/');
-  } catch (error) {
-    res.status(500).send('Internal Server Error'); // SHouyld be json
-  }
+  
+  await googleRegisterController.handleGoogleRegister(req, res)
+  
 });
 
 // Handle the FAILURE redirect route
