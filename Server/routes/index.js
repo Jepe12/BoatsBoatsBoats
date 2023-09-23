@@ -117,17 +117,13 @@ router.get('/google/callback', passport.authenticate('google', {
 
 // Handle the SUCCESS redirect route
 router.get('/auth/google/success', async(req, res) => {
-  
   await googleRegisterController.handleGoogleRegister(req, res)
-  
 });
 
 // Handle the FAILURE redirect route
 router.get('/auth/google/failure', (req, res) => {
-  
-  console.log("Failure")
-  // Handle authentication failure here
-  res.send('Authentication failed.');
+  var message = 'Authentication failed.'
+  res.redirect(`/login?message=${message}`);
 });
 
 module.exports = router;

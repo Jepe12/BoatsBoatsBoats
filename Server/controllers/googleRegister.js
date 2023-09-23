@@ -2,8 +2,7 @@ const ProductController = require('../controllers/product');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
-let controller = null; // Declare controller variable at a higher scope
+let controller = null; 
 
 const handleGoogleRegister = async (req, res) => {
     controller = new ProductController(res.locals.dburi, 'users');
@@ -20,20 +19,18 @@ const handleGoogleRegister = async (req, res) => {
 
     // If User already in DB --> Authenticate GoogleUser
     if (foundUser) {
+        
         // Authenticate
-        console.log("USER EXISTS");
-
         const loginData = {
             user: email,
             pwd: "GOOGLE"
         };
-
-        // Call handleLogin and let it perform the redirection
-        await handleLogin({ body: loginData }, res);
+        await handleGoogleLogin({ body: loginData }, res);
     }
 
     // If user not in DB --> Register & Authenticate GoogleUser
     if (!foundUser) {
+        
         // Register
         try {
             const newUser = {
@@ -42,10 +39,7 @@ const handleGoogleRegister = async (req, res) => {
                 'password': hashedPwd,
                 'refreshToken': ""
             };
-
             await controller.insertData(newUser);
-
-            console.log("Success, registered to DB");
         } catch (err) {
             res.status(500).json({ 'message': err.message });
         }
@@ -55,14 +49,14 @@ const handleGoogleRegister = async (req, res) => {
             user: email,
             pwd: "GOOGLE"
         };
-
-        // Call handleLogin and let it perform the redirection
-        await handleLogin({ body: loginData }, res);
+        await handleGoogleLogin({ body: loginData }, res);
     }
 }
 
 
-const handleLogin = async (req, res) => {
+
+// Handles the login & redirection
+const handleGoogleLogin = async (req, res) => {
     const { user, pwd } = req.body;
 
     // If we don't get both a username & password --> Send a bad request response with a message
@@ -90,12 +84,11 @@ const handleLogin = async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        // Update the user's refreshToken in the database
+        // Update the user's refreshToken in the DB
         await controller.updateRefreshToken(foundUser.username, refreshToken);
 
         // Redirect with the access token as a query 
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000}); 
-        
         res.redirect(`/?accessToken=${accessToken}`);
     } else {
         res.status(401).json({ 'message': 'Authentication failed. Invalid password.' });
