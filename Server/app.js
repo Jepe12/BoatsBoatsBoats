@@ -85,7 +85,7 @@ const hbs = expressHandlebars.create({
 //Use a Custom Templating Engine
 app.engine('handlebars', hbs.engine);
 app.set("view engine", "handlebars");
-app.set("views", path.resolve("./views"));
+app.set("views", path.resolve("./Server/views"));
 
 app.use('/', viewRouter);
 app.use('/', recommendationRouter);
